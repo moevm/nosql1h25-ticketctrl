@@ -21,11 +21,19 @@ body {
 }
 
 .title {
-    margin-bottom: 30px;
     font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.subtitle {
+    margin-top: 5px;
+    margin-bottom: 20px;
+    font-size: 0.8rem;
+    font-weight: 100;
 }
 
 input[type="email"],
+input[type="text"],
 input[type="password"] {
     display: block;
     margin: 15px auto;
