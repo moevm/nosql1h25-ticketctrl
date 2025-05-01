@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fines</title>
+    <link rel="stylesheet" href="../css/fines.css" />
+</head>
+<body>
+<div class="sidebar">
+    <div>
+        <div class="sidebar-header">
+            <div class="logo">
+                <img src="assets/logo.svg" alt="Logo" class="logo-icon" />
+                <div class="site-name">zaicam.net</div>
+            </div>
+            <div class="menu-dots">&#8943;</div>
+        </div>
+        <hr class="dotted-line" />
+        <div class="menu-item">
+            <img src="assets/balance.png" alt="Balance Icon" class="menu-icon" />
+            Balance
+        </div>
+        <div class="menu-item">
+            <img src="assets/trips.svg" alt="Balance Icon" class="menu-icon" />
+            Trips
+        </div>
+        <div class="menu-item active">
+            <img src="assets/fines.png" alt="Balance Icon" class="menu-icon" />
+            Fines
+        </div>
+    </div>
+
+    <div class="sidebar-footer">
+        <hr class="dotted-line" />
+        <div class="user-profile">
+            <img src="assets/profile.svg" alt="Balance Icon" class="avatar" />
+            <div class="username">Гребенников Д.</div>
+            <div class="menu-dots">&#8943;</div>
+        </div>
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="header-row">
+        <h1 class="section-title">
+            <img src="assets/fines.png" alt="Fine Icon" class="menu-icon" />
+            Fines
+        </h1>
+    </div>
+    <hr class="solid-line" />
+    <div class="table-wrapper two-tables">
+        <table class="trips-table">
+            <thead>
+                <tr class="table-heading-row">
+                    <th colspan="4" class="table-heading">
+                        <div class="heading-container">
+                            <span>🔴 Unpaid fines</span>
+                            <button class="filter-button">filter</button>
+                        </div>
+                    </th>
+                </tr>
+                <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Fine</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>25.02.2025</td><td>19:16</td><td>1000₽</td><td class="dots">&#8942;</td></tr>
+                <tr><td>25.02.2025</td><td>19:16</td><td>1000₽</td><td class="dots">&#8942;</td></tr>
+                <tr><td>25.02.2025</td><td>19:16</td><td>500₽</td><td class="dots">&#8942;</td></tr>
+                <tr><td>25.02.2025</td><td>19:16</td><td>300₽</td><td class="dots">&#8942;</td></tr>
+                <tr><td>25.02.2025</td><td>19:16</td><td>1000₽</td><td class="dots">&#8942;</td></tr>
+                <tr><td colspan="4">Unpaid fines: 6</td></tr>
+            </tbody>
+        </table>
+        <table class="trips-table">
+            <thead>
+                <tr class="table-heading-row">
+                    <th colspan="4" class="table-heading">
+                        <div class="heading-container">
+                            <span>🟢 Paid fines</span>
+                            <button class="filter-button">filter</button>
+                        </div>
+                    </th>
+                </tr>
+                <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Fine</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>25.02.2025</td><td>19:16</td><td>1000₽</td><td>...</td></tr>
+                <tr><td>25.02.2025</td><td>19:16</td><td>1000₽</td><td>...</td></tr>
+                <tr><td>25.02.2025</td><td>19:16</td><td>500₽</td><td>...</td></tr>
+                <tr><td>25.02.2025</td><td>19:16</td><td>300₽</td><td>...</td></tr>
+                <tr><td colspan="4">Paid fines: 4</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
