@@ -11,11 +11,11 @@
     <img src="./assets/logo.svg" alt="logo" width="40px" height="40px" class="logo">
     <div class="title">Welcome to Zaicam.net</div>
     <div class="subtitle">Sign up to access the account area</div>
-    <form>
-      <input type="email" placeholder="Email" required />
-      <input type="password" placeholder="Password" required />
-      <input type="text" placeholder="Last name" required />
-      <input type="text" placeholder="First name" required />
+    <form action="/register" method="POST">
+      <input type="email" name="email" placeholder="Email" required />
+      <input type="password" name="password" placeholder="Password" required />
+      <input type="text" name="last_name" placeholder="Last name" required />
+      <input type="text" name="first_name" placeholder="First name" required />
       <button type="submit">Continue with Email</button>
     </form>
     <div class="links">
