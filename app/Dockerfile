@@ -1,11 +1,18 @@
-FROM node:18
+FROM node:18-alpine
 
 WORKDIR /app
 
+# Копируем только файлы, необходимые для установки зависимостей
 COPY package*.json ./
-RUN npm install
 
+# Устанавливаем зависимости
+RUN npm install --production
+
+# Копируем остальные файлы проекта
 COPY . .
 
-CMD ["node", "app.js"]
+# Убедимся, что порт доступен
+EXPOSE 3000
 
+# Запускаем приложение
+CMD ["node", "app.js"]

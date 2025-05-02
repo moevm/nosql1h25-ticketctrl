@@ -11,15 +11,16 @@
     <img src="./assets/logo.svg" alt="logo" width="40px" height="40px" class="logo">
     <div class="title">Welcome to Zaicam.net</div>
     <div class="subtitle">Sign up to access the account area</div>
-    <form action="/register" method="POST">
+    <form action="/user/registration" method="POST">
       <input type="email" name="email" placeholder="Email" required />
       <input type="password" name="password" placeholder="Password" required />
       <input type="text" name="last_name" placeholder="Last name" required />
       <input type="text" name="first_name" placeholder="First name" required />
       <button type="submit">Continue with Email</button>
+      <div id="error-message" class="error-message" style="display:none; color: red;"></div>
     </form>
     <div class="links">
-      <a href="#">Sign in</a>
+      <a href="/user/auth">Sign in</a>
     </div>
   </div>
   <a href="#" class="controller-button">I'm a controller</a>

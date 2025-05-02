@@ -1,24 +1,28 @@
 document.getElementById('login-form').addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value.trim();
+    const formData = {
+        email: e.target.email.value.trim(),
+        password: e.target.password.value.trim()
+    };
 
-    const response = await fetch('/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-    });
+    try {
+        const response = await fetch('/user/auth', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
 
-
-    const data = await response.json();
-
-    if (response.ok) {
-        alert('Успешный вход!');
-        // можно сохранить JWT или перейти на другую страницу
-        // localStorage.setItem('token', data.token);
-        // window.location.href = '/dashboard.html';
-    } else {
-        alert(data.error || 'Ошибка входа');
+        if (response.ok) {
+            // После успешного входа перенаправляем на страницу аккаунта
+            window.location.href = '/user/account';  // Редирект
+        } else {
+            const data = await response.json();
+            alert(data.error || 'Ошибка входа');
+        }
+    } catch (err) {
+        alert('Ошибка соединения с сервером');
     }
 });
