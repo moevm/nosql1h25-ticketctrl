@@ -1,0 +1,83 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    font-family: Arial, sans-serif;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    text-align: center;
+}
+
+.logo {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+}
+
+.title {
+    font-size: 16px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.desc {
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+
+input[type="email"],
+input[type="password"] {
+    display: block;
+    margin: 15px auto;
+    padding: 10px;
+    width: 250px;
+    background-color: #D4D4D4;
+    border: solid #343437 2px;
+    border-radius: 10px;
+    color: white;
+}
+
+button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #52525B;
+    width: 275px;
+    border: solid #343437 2px;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #636363;
+}
+
+.links {
+    margin-top: 15px;
+    font-size: 0.9rem;
+}
+
+.links a {
+    color: #ffffff;
+    margin: 0 10px;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.passenger-button {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    border: solid #343437 2px;
+    border-radius: 11px;
+    padding: 8px 14px;
+    text-decoration: none;
+    font-size: 0.7rem;
+    color: black;
+}
