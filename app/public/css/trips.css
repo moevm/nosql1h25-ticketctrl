@@ -4,6 +4,7 @@ body {
     display: flex;
     background-color: #18181B;
     color: #e0e0e0;
+    font-size: 12px;
 }
 
 .sidebar {
@@ -244,7 +245,7 @@ body {
 
 .modal h2 {
     margin: 0;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 100;
     text-align: center;
     padding-bottom: 25px;
@@ -260,14 +261,14 @@ body {
 }
 
 .modal-label {
-    font-size: 14px;
+    font-size: 12px;
     color: #404040;
     margin-bottom: 6px;
 }
 
 .modal-input {
     padding: 10px;
-    font-size: 14px;
+    font-size: 12px;
     border: 1px solid #343437;
     border-radius: 6px;
     background-color: #2C2C30;
@@ -284,6 +285,7 @@ body {
     cursor: pointer;
     margin: 20px 30px;
     border: 2px solid #343437;
+    font-size: 12px;
 }
 
 .modal-button:hover {
@@ -344,7 +346,7 @@ body {
 
 .modal-date {
     padding: 5px;
-    font-size: 14px;
+    font-size: 12px;
     border: 1px solid #343437;
     border-radius: 6px;
     background-color: #2C2C30;
@@ -383,6 +385,7 @@ body {
     border: 2px solid #343437;
     text-align: center;
     width: 100%;
+    font-size: 12px;
 }
 
 .modal-button1:hover {
@@ -398,5 +401,5 @@ body {
 
 .filter-section p {
     color: #B1B1B1;
-    font-size: 14px;
+    font-size: 12px;
 }
