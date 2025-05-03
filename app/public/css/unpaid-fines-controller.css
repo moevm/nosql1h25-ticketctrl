@@ -2,21 +2,21 @@ body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
     display: flex;
-    background-color: #18181B;
-    color: #e0e0e0;
+    background-color: white;
+    color: black;
     font-size: 12px;
 }
 
 .sidebar {
     width: 220px;
-    background-color: #18181B;
+    background-color: white;
     height: 100vh;
     padding: 16px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border-right: 1px solid #2d2d2d;
+    border-right: 2px solid #2A2A2D;
 }
 
 .sidebar-header {
@@ -42,26 +42,26 @@ body {
 .logo-icon {
     width: 28px;
     height: 28px;
-    background-color: #18181B;
+    background-color: white;
     margin-right: 10px;
 }
 
 .site-name {
     font-weight: 600;
-    color: #fff;
+    color: black;
     font-size: 14px;
 }
 
 .menu-dots {
     font-size: 16px;
-    color: #888;
+    color: black;
     cursor: pointer;
     transform: rotate(90deg);
 }
 
 .dotted-line {
     border: none;
-    border-top: 1px dotted #444;
+    border-top: 1px dotted black;
     margin: 0 0 16px 0;
 }
 
@@ -74,7 +74,7 @@ body {
     font-size: 14px;
     padding: 8px 12px;
     border-radius: 6px;
-    color: #A1A1AA;
+    color: black;
 }
 
 .menu-icon {
@@ -84,14 +84,13 @@ body {
 }
 
 .menu-item:hover {
-    background-color: #212124;
-    color: #fff;
+    background-color: lightgrey;
 }
 
 .menu-item.active {
-    background-color: #212124;
-    border: 1px solid #343437;
-    color: #fff;
+    background-color: #D4D4D4;
+    border: 2px solid #343437;
+    color: black;
 }
 
 .sidebar-footer {
@@ -112,14 +111,14 @@ body {
 
 .username {
     font-size: 14px;
-    color: #ccc;
+    color: black;
     white-space: nowrap;
 }
 
 .main-content {
     flex: 1;
     padding: 0;
-    background-color: #18181B;
+    background-color: white;
     display: flex;
     flex-direction: column;
 }
@@ -128,15 +127,15 @@ body {
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
-    background-color: #212124;
+    background-color: #F6F6F6;
     border-radius: 12px;
     overflow: hidden;
-    color: #A1A1AA;
+    color: black;
     outline: 1px solid #343437;
 }
 
 .trips-table thead {
-    background-color: #18181B;
+    background-color: #C5C5C5;
 }
 
 .trips-table th,
@@ -148,17 +147,17 @@ body {
 
 .trips-table th {
     font-weight: 600;
-    color: #A1A1AA;
+    color: black;
 }
 
 .trips-table .table-heading {
     font-size: 14px;
     text-align: left;
     padding: 20px 24px;
-    background-color: #212124;
+    background-color: #F6F6F6;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
-    border-bottom: 1px solid #343437;
+    border-bottom: 1px solid #323235;
 }
 
 .trips-table tbody tr:last-child td {
@@ -173,12 +172,12 @@ body {
     font-size: 16px;
     font-weight: 500;
     margin: 0;
-    color: #A1A1AA;
+    color: black;
 }
 
 .solid-line {
     border: none;
-    border-top: 1px solid #333;
+    border-top: 1px solid #323235;
     width: 100%;
     margin: 0;
 }
@@ -195,8 +194,8 @@ body {
 }
 
 .filter-button {
-    background-color: #52525B;
-    color: #ccc;
+    background-color: #C5C5C5;
+    color: black;
     border: 1px solid #343437;
     border-radius: 6px;
     padding: 6px 12px;
@@ -211,7 +210,7 @@ body {
 
 .trips-table tbody tr {
     border-top: 1px solid #323235;
-    background-color: #212124;
+    background-color: #F6F6F6;
 }
 
 .two-tables {
@@ -414,4 +413,47 @@ body {
 .filter-section p {
     color: #B1B1B1;
     font-size: 12px;
+}
+
+.plus-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 11px;
+    background-color: white;
+    border: 2px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.plus-button:hover {
+    background-color: #f0f0f0;
+}
+
+.import-export-buttons {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    justify-content: flex-start;
+}
+
+.import-export-button {
+    width: 36px;
+    height: 36px;
+    background-color: white;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.import-export-button img {
+    width: 35px;
+    height: 35px;
 }
