@@ -103,7 +103,7 @@
             <select id="segment-select" class="modal-select">
                 <option value="" disabled selected hidden>Segment category</option>
                 <option value="data">Data</option>
-                <option value="payments">Fine</option>
+                <option value="payments">Payments</option>
             </select>
         </div>
 
@@ -126,7 +126,23 @@
 
 <div id="filter-step2-modal" class="modal-overlay hidden">
     <div class="modal">
-        <h2>Confirm payment</h2>
+        <h2 id="filter-modal-title">Filtration</h2>
+
+        <div class="input-group">
+            <select id="category-select" class="modal-select">
+                <option value="" disabled selected hidden>Type category</option>
+                <option value="Last name">Last name</option>
+                <option value="First name">First name</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <select id="type-select" class="modal-select">
+                <option value="" disabled selected hidden>Choose type</option>
+                <option value="Type A">Type A</option>
+                <option value="Type B">Type B</option>
+            </select>
+        </div>
 
         <hr class="modal-divider"/>
 
@@ -164,6 +180,32 @@
     </div>
 </div>
 
-<script src="../js/fines.js"></script>
+<div id="add-fine-modal" class="modal-overlay hidden">
+    <div class="modal">
+        <h2>Add fine</h2>
+
+        <div class="input-group">
+            <input type="text" id="fine-date" class="modal-input" placeholder="Date"/>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="fine-time" class="modal-input" placeholder="Time"/>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="fine-payment" class="modal-input" placeholder="Payment"/>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="fine-user-id" class="modal-input" placeholder="User ID"/>
+        </div>
+
+        <hr class="modal-divider"/>
+
+        <button id="add-fine-confirm" class="modal-button">Confirm</button>
+    </div>
+</div>
+
+<script src="../js/unpaid-fines-controller.js"></script>
 </body>
 </html>
