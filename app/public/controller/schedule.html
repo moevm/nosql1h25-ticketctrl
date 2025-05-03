@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Schedule</title>
+    <link rel="stylesheet" href="css/schedule-controller.css"/>
+</head>
+<body>
+<div class="sidebar">
+    <div>
+        <div class="sidebar-header">
+            <div class="logo">
+                <img src="assets/logo.svg" alt="Logo" class="logo-icon" />
+                <div class="site-name">zaicam.net</div>
+            </div>
+            <div class="menu-dots">&#8943;</div>
+        </div>
+        <hr class="dotted-line" />
+        <div class="menu-item">
+            <img src="assets/balance.png" alt="Balance Icon" class="menu-icon" />
+            Unpaid fines
+        </div>
+        <div class="menu-item">
+            <img src="assets/fines.png" alt="Balance Icon" class="menu-icon" />
+            Paid fines
+        </div>
+        <div class="menu-item active">
+            <img src="assets/trips.svg" alt="Balance Icon" class="menu-icon" />
+            Schedule
+        </div>
+        <div class="menu-item">
+            <img src="assets/diagram.svg" alt="Balance Icon" class="menu-icon" />
+            Diagram
+        </div>
+    </div>
+
+    <div class="sidebar-footer">
+        <div class="import-export-buttons">
+            <button class="import-export-button">
+                <img src="assets/import.svg" alt="Import">
+            </button>
+            <button class="import-export-button">
+                <img src="assets/export.svg" alt="Export">
+            </button>
+        </div>
+        <hr class="dotted-line"/>
+        <div class="user-profile">
+            <img src="assets/profile.svg" alt="Balance Icon" class="avatar"/>
+            <div class="username">Гребенников Д.</div>
+            <div class="menu-dots">&#8943;</div>
+        </div>
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="header-row">
+        <h1 class="section-title">
+            <img src="assets/trips.svg" alt="Fine Icon" class="menu-icon"/>
+            Schedule
+        </h1>
+    </div>
+    <hr class="solid-line"/>
+    <div class="table-wrapper two-tables">
+        <table class="trips-table">
+            <thead>
+            <tr class="table-heading-row">
+                <th colspan="4" class="table-heading">
+                    <div class="heading-container">
+                        <span>🟢 Weak schedule</span>
+                    </div>
+                </th>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Route</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>20.02.2005</td>
+                <td>19:16</td>
+                <td>10</td>
+            </tr>
+            <tr>
+                <td>21.02.2005</td>
+                <td>19:16</td>
+                <td>12</td>
+            </tr>
+            <tr>
+                <td>22.02.2005</td>
+                <td>19:16</td>
+                <td>17</td>
+            </tr>
+            <tr>
+                <td>23.02.2005</td>
+                <td>19:16</td>
+                <td>23</td>
+            </tr>
+            <tr>
+                <td>24.02.2005</td>
+                <td>19:16</td>
+                <td>10</td>
+            </tr>
+            <tr>
+                <td>Count: 5</td>
+            </tr>
+            </tbody>
+    </div>
+</div>
+
+</body>
+</html>
