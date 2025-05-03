@@ -64,9 +64,9 @@
             <tr><td>ID</td><td>123456789</td></tr>
             <tr><td>Last name</td><td>Гребенников</td></tr>
             <tr><td>First name</td><td>Дмитрий</td></tr>
-            <tr><td>Phone number</td><td>+71234567890</td><td class="dots">&#8942;</td></tr>
-            <tr><td>Email</td><td>example@email.com</td><td class="dots">&#8942;</td></tr>
-            <tr><td>Password</td><td>. . .</td><td class="dots">&#8942;</td></tr>
+            <tr><td>Phone number</td><td>+71234567890</td><td class="dots phone-dots">&#8942;</td></tr>
+            <tr><td>Email</td><td>example@email.com</td><td class="dots email-dots">&#8942;</td></tr>
+            <tr><td>Password</td><td>********</td><td class="dots password-dots">&#8942;</td></tr>
             <tr><td>Created at</td><td>28.05.2005 19:48</td></tr>
             <tr><td>Last update at</td><td>28.05.2012 19:48</td></tr>
             <tr><td> </td></tr>
@@ -83,12 +83,84 @@
             </tr>
             </thead>
             <tbody>
-            <tr><td>Bank card</td><td>2202 . . . </td><td class="dots">&#8942;</td></tr>
-            <tr><td>Phone</td><td>+71234567890</td><td class="dots">&#8942;</td></tr>
+            <tr><td>Phone</td><td>+71234567890</td><td class="dots payment-phone-dots">&#8942;</td></tr>
+            <tr><td>Bank card</td><td>2202 . . . </td><td class="dots payment-card-dots">&#8942;</td></tr>
             <tr><td> </td></tr>
             </tbody>
         </table>
     </div>
 </div>
+
+<div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal">
+        <h2 id="modal-title">Change phone number</h2>
+        <div class="input-group">
+            <label for="phone-input" class="modal-label">enter phone number</label>
+            <input type="text" id="phone-input" placeholder="Enter phone number" class="modal-input"/>
+        </div>
+        <hr class="modal-divider"/>
+        <button id="confirm-button" class="modal-button">Confirm</button>
+    </div>
+</div>
+
+<div id="modal-overlay-email" class="modal-overlay hidden">
+    <div class="modal">
+        <h2 id="modal-title-email">Change email</h2>
+        <div class="input-group">
+            <label for="email-input" class="modal-label">enter email</label>
+            <input type="email" id="email-input" placeholder="Enter email" class="modal-input"/>
+        </div>
+        <hr class="modal-divider"/>
+        <button id="confirm-email-button" class="modal-button">Confirm</button>
+    </div>
+</div>
+
+<div id="modal-overlay-password" class="modal-overlay hidden">
+    <div class="modal">
+        <h2 id="modal-title-password">Change password</h2>
+        <div class="input-group">
+            <label for="password-input" class="modal-label">enter new password</label>
+            <input type="password" id="password-input" placeholder="Enter new password" class="modal-input"/>
+        </div>
+        <hr class="modal-divider"/>
+        <button id="confirm-password-button" class="modal-button">Confirm</button>
+    </div>
+</div>
+
+<div id="modal-overlay-payment" class="modal-overlay hidden">
+    <div class="modal">
+        <h2 id="modal-title-payment">Change number for payment</h2>
+        <div class="input-group">
+            <label for="payment-input" class="modal-label">enter phone</label>
+            <input type="text" id="payment-input" placeholder="Enter new card number" class="modal-input"/>
+        </div>
+        <hr class="modal-divider"/>
+        <button id="confirm-payment-button" class="modal-button">Confirm</button>
+    </div>
+</div>
+
+<div id="modal-overlay-payment-card" class="modal-overlay hidden">
+    <div class="modal">
+        <h2 id="modal-title-payment-card">Change bank card</h2>
+        <div class="input-group-card">
+            <div class="payment-card-container">
+                <input type="text" id="payment-input-1" class="payment-card-input" placeholder="XXXX" maxlength="4">
+                <input type="text" id="payment-input-2" class="payment-card-input" placeholder="XXXX" maxlength="4">
+                <input type="text" id="payment-input-3" class="payment-card-input" placeholder="XXXX" maxlength="4">
+                <input type="text" id="payment-input-4" class="payment-card-input" placeholder="XXXX" maxlength="4">
+            </div>
+            <div class="payment-info-container">
+                <div><input type="text" id="payment-expiry" class="payment-card-expiry" placeholder="MM">
+                    /
+                    <input type="text" id="payment-expiry1" class="payment-card-expiry" placeholder="YY"></div>
+                <input type="text" id="payment-cvc" class="payment-card-cvc" placeholder="CVC">
+            </div>
+        </div>
+        <hr class="modal-divider"/>
+        <button id="confirm-payment-card-button" class="modal-button">Confirm</button>
+    </div>
+</div>
+
+<script src="../js/account.js"></script>
 </body>
 </html>
