@@ -268,7 +268,6 @@ body {
     cursor: pointer;
 }
 
-/* Модальное окно */
 .modal-overlay {
     position: fixed;
     top: 0;

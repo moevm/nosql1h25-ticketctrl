@@ -79,5 +79,87 @@
         </table>
     </div>
 </div>
+
+<div id="filter-modal-overlay" class="modal-overlay hidden">
+    <div class="modal">
+        <h2 id="filter-modal-title">Filtration</h2>
+
+        <div class="input-group">
+            <select id="segment-select" class="modal-select">
+                <option value="" disabled selected hidden>Segment category</option>
+                <option value="data">Data</option>
+                <option value="payments">Payments</option>
+            </select>
+        </div>
+
+        <div class="input-row">
+            <div class="input-subgroup">
+                <label for="from-input" class="modal-label">From</label>
+                <input type="date" id="from-input" class="modal-date"/>
+            </div>
+            <div class="input-subgroup">
+                <label for="to-input" class="modal-label">To</label>
+                <input type="date" id="to-input" class="modal-date"/>
+            </div>
+        </div>
+
+        <hr class="modal-divider"/>
+
+        <button id="filter-confirm-button" class="modal-button">Confirm</button>
+    </div>
+</div>
+
+<div id="filter-step2-modal" class="modal-overlay hidden">
+    <div class="modal">
+        <h2>Filtration</h2>
+
+        <select id="type-category-select" class="modal-select1">
+            <option value="" disabled selected hidden>Type category</option>
+            <option value="option1"Type</option>
+        </select>
+
+        <select id="choose-type-select" class="modal-select1">
+            <option value="" disabled selected hidden>Choose type</option>
+            <option value="type1">Type A</option>
+            <option value="type2">Type B</option>
+        </select>
+
+        <hr class="modal-divider"/>
+
+        <button id="filter-step2-confirm" class="modal-button">Confirm</button>
+    </div>
+</div>
+
+<div id="top-filter-modal" class="modal-overlay hidden">
+    <div class="modal">
+        <h2>Filtration</h2>
+        <hr class="modal-divider"/>
+
+        <div class="filter-section">
+            <p>Date: From 01.01.2000 To 12.12.2012</p>
+            <hr class="modal-divider"/>
+
+            <p>Payment: From 10 To 1000</p>
+            <hr class="modal-divider"/>
+
+            <div class="action-buttons">
+                <button id="plus-button" class="modal-button action-button">
+                    <img src="assets/plus.svg" alt="plus icon" class="action-icon"/>
+                </button>
+                <button id="trash-button" class="modal-button action-button">
+                    <img src="assets/trash.svg" alt="trash icon" class="action-icon"/>
+                </button>
+            </div>
+
+            <hr class="modal-divider"/>
+
+            <div class="button-confirm">
+                <button id="top-filter-confirm" class="modal-button1">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../js/trips.js"></script>
 </body>
 </html>
