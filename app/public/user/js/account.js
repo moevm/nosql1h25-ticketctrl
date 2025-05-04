@@ -28,6 +28,44 @@ const paymentInputs = [
 const paymentExpiry = document.getElementById('payment-expiry');
 const paymentCVC = document.getElementById('payment-cvc');
 
+
+window.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const response = await fetch('/user/account-data');
+        const user = await response.json();
+
+        if (!response.ok) {
+            console.error(user.error || 'Ошибка получения данных');
+            return;
+        }
+
+        const rows = document.querySelectorAll('.trips-table:first-of-type tbody tr');
+
+        rows[0].children[1].textContent = safeValue(user._id);
+        rows[1].children[1].textContent = safeValue(user.last_name);
+        rows[2].children[1].textContent = safeValue(user.first_name);
+        rows[3].children[1].textContent = safeValue(user.phone);
+        rows[4].children[1].textContent = safeValue(user.email);
+
+        // password оставляем скрытым
+        rows[6].children[1].textContent = formatNeo4jDateTime(user.create_at);
+        rows[7].children[1].textContent = formatNeo4jDateTime(user.last_update_at);
+
+        // вторая таблица (платёжная информация)
+        const payRows = document.querySelectorAll('.trips-table')[1].querySelectorAll('tbody tr');
+        payRows[0].children[1].textContent = safeValue(user.phone);
+        payRows[1].children[1].textContent = safeValue(user.card_number);
+
+
+        // И имя в боковой панели
+        const sidebarName = document.querySelector('.username');
+        sidebarName.textContent = `${user.last_name} ${user.first_name[0]}.`;
+    } catch (err) {
+        console.error('Ошибка загрузки данных аккаунта:', err);
+    }
+});
+
+
 paymentPhoneDots.addEventListener('click', function(event) {
     const row = event.target.closest('tr');
     const paymentCell = row.querySelector('td:nth-child(2)');
@@ -134,8 +172,104 @@ confirmPaymentCardButton.addEventListener('click', function() {
     modalOverlayPaymentCard.classList.add('hidden');
 });
 
-confirmPaymentPhoneButton.addEventListener('click', function() {
+confirmPaymentPhoneButton.addEventListener('click', async function () {
     const newPhoneNumber = phoneInput.value;
-    console.log('Новый номер телефона для оплаты:', newPhoneNumber);
+    await updateField('phone', newPhoneNumber);
     modalOverlayPaymentPhone.classList.add('hidden');
 });
+
+
+function formatNeo4jDateTime(obj) {
+    if (!obj || typeof obj !== 'object') return 'N/A';
+    const y = obj.year.low || obj.year;
+    const m = obj.month.low || obj.month;
+    const d = obj.day.low || obj.day;
+    const h = obj.hour.low || obj.hour;
+    const min = obj.minute.low || obj.minute;
+    const s = obj.second.low || obj.second;
+
+    return `${String(d).padStart(2, '0')}.${String(m).padStart(2, '0')}.${y} ${String(h).padStart(2, '0')}:${String(min).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
+
+function safeValue(value) {
+    if (value === null || value === undefined || value === '') return '—';
+    return value;
+}
+
+
+confirmPhoneButton.addEventListener('click', async function () {
+    const newPhoneNumber = phoneInput.value;
+    await updateField('phone', newPhoneNumber);
+    modalOverlayPhone.classList.add('hidden');
+});
+
+
+confirmEmailButton.addEventListener('click', async function () {
+    const newEmail = emailInput.value;
+    await updateField('email', newEmail);
+    modalOverlayEmail.classList.add('hidden');
+});
+
+
+confirmPasswordButton.addEventListener('click', async function () {
+    const newPassword = passwordInput.value;
+    await updateField('password', newPassword);
+    modalOverlayPassword.classList.add('hidden');
+});
+
+
+confirmPaymentCardButton.addEventListener('click', async function () {
+    const newCard = paymentInputs.map(input => input.value.trim()).join('');
+    await updateField('card_number', newCard);
+    modalOverlayPaymentCard.classList.add('hidden');
+});
+
+
+async function updateField(field, value) {
+    try {
+        const res = await fetch('/user/account/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ field, value })
+        });
+
+        if (res.ok) {
+            updateDOMField(field, value);
+        } else {
+            const err = await res.json();
+            alert(err.error || 'Ошибка при обновлении');
+        }
+    } catch (err) {
+        alert('Ошибка соединения');
+    }
+}
+
+
+function updateDOMField(field, value) {
+    const rows = document.querySelectorAll('.trips-table')[0].querySelectorAll('tbody tr');
+    const payRows = document.querySelectorAll('.trips-table')[1].querySelectorAll('tbody tr');
+    const safe = safeValue(value);
+
+    switch (field) {
+        case 'phone':
+            rows[3].children[1].textContent = safe;
+            payRows[0].children[1].textContent = safe;
+            break;
+        case 'email':
+            rows[4].children[1].textContent = safe;
+            break;
+        case 'card_number':
+            payRows[1].children[1].textContent = safe;
+            break;
+        case 'password':
+            // Ничего не трогаем — скрыто
+            break;
+    }
+
+    // Обновить дату последнего обновления
+    const now = new Date();
+    rows[7].children[1].textContent = `${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
+}
+
+

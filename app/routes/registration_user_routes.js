@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();  // <-- This is where the error is happening
 const path = require('path');
 const driver = require('../neo4j');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 // Define routes
 router.get('/registration', (req, res) => {
@@ -28,15 +28,18 @@ router.post('/registration', async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
         await session.run(
-            `CREATE (p:Passenger {
-                _id: $id,
-                email: $email,
-                password: $password,
-                first_name: $first_name,
-                last_name: $last_name,
-                create_at: datetime(),
-                last_update_at: datetime()
-            })`,
+    `CREATE (p:Passenger {
+            _id: $id,
+            email: $email,
+            password: $password,
+            first_name: $first_name,
+            last_name: $last_name,
+            phone: null,
+            payment_phone: null,
+            card_number: null,
+            create_at: datetime(),
+            last_update_at: datetime()
+             })`,
             {
                 id: Date.now(),
                 email,
@@ -45,6 +48,7 @@ router.post('/registration', async (req, res) => {
                 last_name
             }
         );
+
 
         // Редирект на страницу авторизации после успешной регистрации
         return res.redirect('/user/auth');

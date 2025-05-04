@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const driver = require('../neo4j');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const router = express.Router();
 
@@ -38,7 +38,7 @@ router.post('/auth', async (req, res) => {
             return res.status(400).json({ error: 'Неверный пароль' });
         }
 
-        // Редирект на страницу аккаунта после успешного входа
+        req.session.email = user.email;
         return res.redirect('/user/account');
     } catch (err) {
         console.error('Login error:', err);
