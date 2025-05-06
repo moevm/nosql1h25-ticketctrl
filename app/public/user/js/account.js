@@ -263,13 +263,21 @@ function updateDOMField(field, value) {
             payRows[1].children[1].textContent = safe;
             break;
         case 'password':
-            // Ничего не трогаем — скрыто
+        
             break;
     }
 
-    // Обновить дату последнего обновления
+
     const now = new Date();
     rows[7].children[1].textContent = `${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
 }
+
+
+const tripsMenuItem = document.getElementById('trips-menu-item');
+
+
+tripsMenuItem.addEventListener('click', function() {
+    window.location.href = 'http://localhost:3000/user/trips';
+});
 
 
