@@ -28,12 +28,13 @@ const authRoutes = require('./routes/auth_user_routes');
 const registrationRoutes = require('./routes/registration_user_routes');
 const accountRoutes = require('./routes/account_user_routes');
 const tripsRoutes = require('./routes/account_trips_routes');
+const finesRoutes = require('./routes/unpaid_routes');
 
 app.use('/user', authRoutes);
 app.use('/user', registrationRoutes);
 app.use('/user', accountRoutes);
 app.use('/user', tripsRoutes);
-
+app.use('/user', finesRoutes)
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
