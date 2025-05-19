@@ -126,4 +126,11 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+const finesMenuItem = document.getElementById('fines-menu-item');
+
+
+finesMenuItem.addEventListener('click', function() {
+    window.location.href = 'http://localhost:3000/user/fines';
+});
+
 
