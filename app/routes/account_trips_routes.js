@@ -65,6 +65,8 @@ router.get('/account/trips', async (req, res) => {
                 id: trip._id,
                 date: trip.date,
                 route: trip.route,
+                type: trip.type,
+                coast: typeof trip.coast === 'object' && trip.coast?.low !== undefined ? trip.coast.low : Number(trip.coast),
                 passengerId: trip.passanger_id
             };
         });
