@@ -75,12 +75,11 @@ async function loadTrips() {
             row.innerHTML = `
                 <td>${date}</td>
                 <td>${time}</td>
-                <td>Bus</td>
-                <td>70₽</td>
+                <td>${trip.type || '-'}</td>
+                <td>${trip.coast}</td>
             `;
             tbody.appendChild(row);
         }
-
 
         const countRow = document.createElement('tr');
         countRow.innerHTML = `<td colspan="4">Count: ${trips.length}</td>`;
