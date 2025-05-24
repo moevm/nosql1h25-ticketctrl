@@ -78,3 +78,73 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+async function fetchFines() {
+    const res = await fetch('/controller/fines_unpaid');
+    const fines = await res.json();
+    const tbody = document.querySelector('tbody');
+    tbody.innerHTML = '';
+
+    fines.forEach(fine => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${fine.date}</td>
+            <td>${fine.time}</td>
+            <td>${fine.amount}₽</td>
+            <td>${fine.lastName}</td>
+            <td>${fine.firstName}</td>
+            <td></td>
+        `;
+        tbody.appendChild(tr);
+    });
+
+    const trCount = document.createElement('tr');
+    trCount.innerHTML = `<td colspan="6">Count: ${fines.length}</td>`;
+    tbody.appendChild(trCount);
+}
+fetchFines();
+
+
+
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const res = await fetch('/controller/account-data');
+        const data = await res.json();
+
+        if (res.ok) {
+            // Подпись в сайдбаре
+            document.querySelector('.username').textContent = `${data.last_name} ${data.first_name[0]}.`;
+        } else {
+            alert(data.error || 'Failed to load account data');
+        }
+    } catch (err) {
+        console.error('Error loading controller data:', err);
+        alert('Error loading data');
+    }
+});
+
+
+
+
+
+document.getElementById('paid-fines-menu').addEventListener('click', function (e) {
+    e.preventDefault();
+    window.location.href = '/controller/paid-fines';
+});
+
+document.getElementById('schedule-menu').addEventListener('click', function (e) {
+    e.preventDefault();
+    window.location.href = '/controller/schedule';
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    const usernameElement = document.getElementById('user-profile');
+
+    if (usernameElement) {
+        usernameElement.addEventListener('click', function() {
+            window.location.href = 'http://localhost:3000/controller/account';
+        });
+    }
+});
