@@ -69,3 +69,56 @@ confirmPasswordButton.addEventListener('click', function() {
     console.log('Новый пароль:', newPassword);
     modalOverlayPassword.classList.add('hidden');
 });
+
+
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const res = await fetch('/controller/account-data');
+        const data = await res.json();
+
+        if (res.ok) {
+            const rows = document.querySelectorAll('.trips-table tbody tr');
+
+            rows[0].children[1].textContent = data._id || '-';
+            rows[1].children[1].textContent = data.last_name || '-';
+            rows[2].children[1].textContent = data.first_name || '-';
+            rows[3].children[1].textContent = data.email || '-';
+            rows[5].children[1].textContent = formatDate(data.create_at) || '-';
+            rows[6].children[1].textContent = formatDate(data.last_update_at) || '-';
+
+            // Подпись в сайдбаре
+            document.querySelector('.username').textContent = `${data.last_name} ${data.first_name[0]}.`;
+        } else {
+            alert(data.error || 'Failed to load account data');
+        }
+    } catch (err) {
+        console.error('Error loading controller data:', err);
+        alert('Error loading data');
+    }
+});
+
+function formatDate(datetimeStr) {
+    if (!datetimeStr) return '-';
+    try {
+        const date = new Date(datetimeStr);
+        if (isNaN(date)) return '-';
+        return date.toLocaleString('ru-RU');
+    } catch (e) {
+        return '-';
+    }
+}
+
+document.getElementById('unpaid-fines-menu').addEventListener('click', function (e) {
+    e.preventDefault();
+    window.location.href = '/controller/unpaid-fines';
+});
+
+document.getElementById('paid-fines-menu').addEventListener('click', function (e) {
+    e.preventDefault();
+    window.location.href = '/controller/paid-fines';
+});
+
+document.getElementById('schedule-menu').addEventListener('click', function (e) {
+    e.preventDefault();
+    window.location.href = '/controller/schedule';
+});
