@@ -26,3 +26,8 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
         alert('Ошибка соединения с сервером');
     }
 });
+
+document.getElementById('controller-login').addEventListener('click', function (e) {
+    e.preventDefault();
+    window.location.href = '/controller/auth_controller'; // редирект на контроллерскую страницу авторизации
+});
