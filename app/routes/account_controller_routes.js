@@ -21,7 +21,7 @@ router.get('/account-data', async (req, res) => {
 
     try {
         const result = await session.run(
-            'MATCH (c:Controller {email: $email}) RETURN c, id(c) as nodeId',
+            'MATCH (c:Controller {email: $email}) RETURN c._id AS id, c',
             { email }
         );
 
@@ -30,11 +30,11 @@ router.get('/account-data', async (req, res) => {
         }
 
         const controller = result.records[0].get('c').properties;
-        const nodeId = result.records[0].get('nodeId').toInt(); // Neo4j integer
+        const id = result.records[0].get('id').toInt?.() || result.records[0].get('id');
 
         return res.json({
             ...controller,
-            _id: nodeId,
+            _id: id,
             create_at: controller.create_at ? controller.create_at.toString() : null,
             last_update_at: controller.last_update_at ? controller.last_update_at.toString() : null
         });
