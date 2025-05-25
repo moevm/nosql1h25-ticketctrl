@@ -35,13 +35,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Фильтрация и рендер таблицы
+    function parseDateDMY(str) {
+        const parts = str.split('.');
+        if (parts.length !== 3) return null;
+        const day = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1;
+        const year = parseInt(parts[2], 10);
+        return new Date(year, month, day);
+    }
+
     function applyFiltersAndRender() {
         let filtered = allFines;
 
         filters.forEach(filter => {
             if (filter.type === 'date') {
                 filtered = filtered.filter(fine => {
-                    const fineDate = new Date(fine.date);
+                    let fineDate = parseDateDMY(fine.date);
+                    if (!fineDate) return false; // если дата невалидна — исключаем
                     return fineDate >= filter.from && fineDate <= filter.to;
                 });
             } else if (filter.type === 'payments') {
