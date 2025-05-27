@@ -274,7 +274,7 @@ function updateDOMField(field, value) {
 
 
 const tripsMenuItem = document.getElementById('trips-menu-item');
-
+const balanceMenuItem = document.getElementById('balance-menu-item');
 
 tripsMenuItem.addEventListener('click', function() {
     window.location.href = 'http://localhost:3000/user/trips';
@@ -285,6 +285,11 @@ const finesMenuItem = document.getElementById('fines-menu-item');
 
 finesMenuItem.addEventListener('click', function() {
     window.location.href = 'http://localhost:3000/user/fines';
+});
+
+
+balanceMenuItem.addEventListener('click', function() {
+    window.location.href = 'http://localhost:3000/user/balance';
 });
 
 
