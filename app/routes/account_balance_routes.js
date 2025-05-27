@@ -35,6 +35,7 @@ router.get('/account-data', async (req, res) => {
     }
 });
 
+
 router.get('/account/balance', async (req, res) => {
     const session = driver.session();
     const email = req.session.email;
@@ -59,10 +60,11 @@ router.get('/account/balance', async (req, res) => {
         const topups = result.records.map(record => {
             const topup = record.get('t').properties;
             return {
-                id: topup._id,
+                _id: topup._id,
                 date: topup.date,
-                route: topup.route,
-                passengerId: topup.passanger_id
+                type: topup.type,
+                amount: parseFloat(topup.amount),
+                passanger_id: topup.passanger_id // оставлено как есть, если это не опечатка
             };
         });
 
