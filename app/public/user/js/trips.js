@@ -249,3 +249,9 @@ const finesMenuItem = document.getElementById('fines-menu-item');
 finesMenuItem.addEventListener('click', function () {
     window.location.href = 'http://localhost:3000/user/fines';
 });
+
+const balanceMenuItem = document.getElementById('balance-menu-item');
+
+balanceMenuItem.addEventListener('click', function() {
+    window.location.href = 'http://localhost:3000/user/balance';
+});
