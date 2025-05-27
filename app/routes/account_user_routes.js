@@ -29,6 +29,10 @@ router.get('/account-data', async (req, res) => {
         }
 
         const user = result.records[0].get('p').properties;
+
+        if (user._id && typeof user._id.toNumber === 'function') {
+            user._id = user._id.toNumber();
+        }
         return res.json(user);
     } catch (err) {
         return res.status(500).json({ error: 'Server error' });
