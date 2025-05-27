@@ -318,10 +318,16 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 const tripsMenuItem = document.getElementById('trips-menu-item');
+const balanceMenuItem = document.getElementById('balance-menu-item');
 
 
 tripsMenuItem.addEventListener('click', function() {
     window.location.href = 'http://localhost:3000/user/trips';
+});
+
+
+balanceMenuItem.addEventListener('click', function() {
+    window.location.href = 'http://localhost:3000/user/balance';
 });
 
 
