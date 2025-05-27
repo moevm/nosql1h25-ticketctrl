@@ -81,3 +81,98 @@ document.addEventListener('DOMContentLoaded', () => {
         filterStep2Modal.classList.add('hidden');
     });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const balanceAmountEl = document.querySelector('.balance-box .amount');
+    const paymentHistoryBody = document.querySelector('.table-wrapper tbody');
+
+    async function fetchTopups() {
+        try {
+            const res = await fetch('/user/account/balance');
+            if (!res.ok) throw new Error('Failed to fetch balance data');
+            const topups = await res.json();
+
+            // Очистить таблицу истории платежей
+            paymentHistoryBody.innerHTML = '';
+
+            // Переменные для суммы и подсчёта
+            let totalAmount = 0;
+
+            // Форматтер дат и времени
+            const dateOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
+            const timeOptions = { hour: '2-digit', minute: '2-digit' };
+
+            topups.forEach(topup => {
+                totalAmount += topup.amount;
+
+                const dateObj = new Date(topup.date);
+                const dateStr = dateObj.toLocaleDateString('ru-RU', dateOptions);
+                const timeStr = dateObj.toLocaleTimeString('ru-RU', timeOptions);
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+          <td>${dateStr}</td>
+          <td>${timeStr}</td>
+          <td>${topup.amount.toFixed(2)}р</td>
+          <td>${topup.type}</td>
+        `;
+                paymentHistoryBody.appendChild(tr);
+            });
+
+            // Добавить строку с подсчётом количества
+            const countTr = document.createElement('tr');
+            countTr.innerHTML = `<td colspan="4">Count: ${topups.length}</td>`;
+            paymentHistoryBody.appendChild(countTr);
+
+            // Обновить общий баланс в левой колонке
+            balanceAmountEl.textContent = `${totalAmount.toFixed(2).replace('.', ',')} Р`;
+
+        } catch (err) {
+            console.error('Error loading topups:', err);
+            balanceAmountEl.textContent = 'Ошибка загрузки';
+        }
+    }
+
+    fetchTopups();
+});
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const response = await fetch('/user/account-data');
+        const user = await response.json();
+
+        if (!response.ok) {
+            console.error(user.error || 'Ошибка получения данных');
+            return;
+        }
+
+        const sidebarName = document.querySelector('.username');
+        sidebarName.textContent = `${user.last_name} ${user.first_name[0]}.`;
+    } catch (err) {
+        console.error('Ошибка загрузки данных аккаунта:', err);
+    }
+});
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    const usernameElement = document.getElementById('user-profile');
+    if (usernameElement) {
+        usernameElement.addEventListener('click', function () {
+            window.location.href = 'http://localhost:3000/user/account';
+        });
+    }
+});
+
+const finesMenuItem = document.getElementById('fines-menu-item');
+finesMenuItem.addEventListener('click', function () {
+    window.location.href = 'http://localhost:3000/user/fines';
+});
+
+const tripsMenuItem = document.getElementById('trips-menu-item');
+tripsMenuItem.addEventListener('click', function() {
+    window.location.href = 'http://localhost:3000/user/trips';
+});
