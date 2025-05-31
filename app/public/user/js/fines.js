@@ -1,3 +1,35 @@
+// Функция для парсинга даты из объекта с полями year, month, day, hour и т.д.
+function parseDateFromObject(obj) {
+    if (!obj || typeof obj !== 'object') return null;
+
+    const year = obj.year?.low ?? 0;
+    const month = (obj.month?.low ?? 1) - 1; // месяцы в JS с 0
+    const day = obj.day?.low ?? 1;
+    const hour = obj.hour?.low ?? 0;
+    const minute = obj.minute?.low ?? 0;
+    const second = obj.second?.low ?? 0;
+
+    return new Date(Date.UTC(year, month, day, hour, minute, second));
+}
+
+// Функция для форматирования даты и времени
+function formatDateTime(dateObjFromServer) {
+    const dateObj = parseDateFromObject(dateObjFromServer);
+    if (!dateObj || isNaN(dateObj)) return { date: "Invalid Date", time: "Invalid Date" };
+
+    const day = String(dateObj.getUTCDate()).padStart(2, '0');
+    const month = String(dateObj.getUTCMonth() + 1).padStart(2, '0');
+    const year = dateObj.getUTCFullYear();
+
+    const hours = String(dateObj.getUTCHours()).padStart(2, '0');
+    const minutes = String(dateObj.getUTCMinutes()).padStart(2, '0');
+
+    return {
+        date: `${day}.${month}.${year}`,
+        time: `${hours}:${minutes}`
+    };
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const plusButton = document.getElementById('plus-button');
     const trashButton = document.getElementById('trash-button');
@@ -10,15 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterConfirmButton = document.getElementById('filter-confirm-button');
 
     let finesData = [];
-
-    // Два массива фильтров для двух таблиц
     let unpaidFilters = [];
     let paidFilters = [];
-
-    // Переменная для хранения, для какой таблицы сейчас открыто окно фильтров
     let currentTable = null; // 'unpaid' или 'paid'
 
-    // Загрузка штрафов с сервера
     async function fetchFines() {
         try {
             const response = await fetch('/user/account/fines');
@@ -31,44 +58,38 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Применяем фильтры и обновляем обе таблицы
     function applyFiltersAndRender() {
-        // Для неоплаченных фильтры unpaidFilters
-        const filteredUnpaid = finesData.filter(fine => !fine.paid);
-        let filteredUnpaidFinal = filteredUnpaid;
+        let filteredUnpaid = finesData.filter(fine => !fine.paid);
         unpaidFilters.forEach(filter => {
             if (filter.type === 'date') {
-                filteredUnpaidFinal = filteredUnpaidFinal.filter(fine => {
-                    const fineDate = new Date(fine.date);
+                filteredUnpaid = filteredUnpaid.filter(fine => {
+                    const fineDate = parseDateFromObject(fine.date);
                     return fineDate >= filter.from && fineDate <= filter.to;
                 });
             } else if (filter.type === 'fine') {
-                filteredUnpaidFinal = filteredUnpaidFinal.filter(fine => {
+                filteredUnpaid = filteredUnpaid.filter(fine => {
                     return fine.amount >= filter.from && fine.amount <= filter.to;
                 });
             }
         });
 
-        // Для оплаченных фильтры paidFilters
-        const filteredPaid = finesData.filter(fine => fine.paid);
-        let filteredPaidFinal = filteredPaid;
+        let filteredPaid = finesData.filter(fine => fine.paid);
         paidFilters.forEach(filter => {
             if (filter.type === 'date') {
-                filteredPaidFinal = filteredPaidFinal.filter(fine => {
-                    const fineDate = new Date(fine.date);
+                filteredPaid = filteredPaid.filter(fine => {
+                    const fineDate = parseDateFromObject(fine.date);
                     return fineDate >= filter.from && fineDate <= filter.to;
                 });
             } else if (filter.type === 'fine') {
-                filteredPaidFinal = filteredPaidFinal.filter(fine => {
+                filteredPaid = filteredPaid.filter(fine => {
                     return fine.amount >= filter.from && fine.amount <= filter.to;
                 });
             }
         });
 
-        renderTables(filteredUnpaidFinal, filteredPaidFinal);
+        renderTables(filteredUnpaid, filteredPaid);
     }
 
-    // Отрисовка таблиц (принимаем уже отфильтрованные данные)
     function renderTables(unpaidFines, paidFines) {
         const unpaidTbody = document.querySelectorAll('.trips-table tbody')[0];
         const paidTbody = document.querySelectorAll('.trips-table tbody')[1];
@@ -80,35 +101,31 @@ document.addEventListener('DOMContentLoaded', () => {
         let paidCount = 0;
 
         unpaidFines.forEach(fine => {
-            const dateObj = new Date(fine.date);
-            const date = dateObj.toLocaleDateString();
-            const time = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const { date, time } = formatDateTime(fine.date);
             const amount = `${fine.amount}₽`;
 
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${date}</td>
-                <td>${time}</td>
-                <td>${amount}</td>
-                <td class="dots">&#8942;</td>
-            `;
+        <td>${date}</td>
+        <td>${time}</td>
+        <td>${amount}</td>
+        <td class="dots">&#8942;</td>
+      `;
             unpaidTbody.appendChild(row);
             unpaidCount++;
         });
 
         paidFines.forEach(fine => {
-            const dateObj = new Date(fine.date);
-            const date = dateObj.toLocaleDateString();
-            const time = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const { date, time } = formatDateTime(fine.date);
             const amount = `${fine.amount}₽`;
 
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${date}</td>
-                <td>${time}</td>
-                <td>${amount}</td>
-                <td class="dots">&#8942;</td>
-            `;
+        <td>${date}</td>
+        <td>${time}</td>
+        <td>${amount}</td>
+        <td class="dots">&#8942;</td>
+      `;
             paidTbody.appendChild(row);
             paidCount++;
         });
@@ -117,10 +134,10 @@ document.addEventListener('DOMContentLoaded', () => {
         paidTbody.innerHTML += `<tr><td colspan="4">Paid fines: ${paidCount}</td></tr>`;
     }
 
-    // Обновляем содержимое .filter-section с фильтрами для текущей таблицы (currentTable)
+    // Обновление UI фильтров (оставляю ваш существующий код)
     function updateFilterSection() {
         const filterSection = topFilterModal.querySelector('.filter-section');
-        filterSection.innerHTML = ''; // очищаем
+        filterSection.innerHTML = '';
 
         const activeFilters = currentTable === 'unpaid' ? unpaidFilters : paidFilters;
 
@@ -139,7 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Добавляем кнопки + и корзина
         const actionButtonsDiv = document.createElement('div');
         actionButtonsDiv.className = 'action-buttons';
 
@@ -152,7 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         filterSection.appendChild(document.createElement('hr'));
 
-        // Кнопка Confirm
         const buttonConfirmDiv = document.createElement('div');
         buttonConfirmDiv.className = 'button-confirm';
 
@@ -168,7 +183,6 @@ document.addEventListener('DOMContentLoaded', () => {
             filterModalOverlay.classList.remove('hidden');
             topFilterModal.classList.add('hidden');
 
-            // Сброс полей
             segmentSelect.value = '';
             fromInput.value = '';
             toInput.value = '';
@@ -192,7 +206,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Обработчик изменения селектора
     segmentSelect.addEventListener('change', () => {
         if (segmentSelect.value === 'date') {
             fromInput.type = 'date';
@@ -207,7 +220,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // При подтверждении добавления фильтра — добавляем в нужный массив и показываем окно с фильтрами
     filterConfirmButton.addEventListener('click', () => {
         const type = segmentSelect.value;
         let from = fromInput.value;
@@ -251,16 +263,14 @@ document.addEventListener('DOMContentLoaded', () => {
         updateFilterSection();
     });
 
-    // При нажатии кнопки фильтра в таблице сохраняем currentTable и открываем окно фильтров с правильными данными
     filterButtons.forEach((button, index) => {
         button.addEventListener('click', () => {
-            currentTable = index === 0 ? 'unpaid' : 'paid'; // первая кнопка — unpaid, вторая — paid
+            currentTable = index === 0 ? 'unpaid' : 'paid';
             topFilterModal.classList.remove('hidden');
             updateFilterSection();
         });
     });
 
-    // Закрытие модальных окон по клику вне
     filterModalOverlay.addEventListener('click', (e) => {
         if (e.target === filterModalOverlay) {
             filterModalOverlay.classList.add('hidden');
@@ -274,7 +284,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Закрытие по ESC
     document.addEventListener('keydown', e => {
         if (e.key === 'Escape') {
             filterModalOverlay.classList.add('hidden');
@@ -282,7 +291,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Загрузка штрафов
     fetchFines();
 });
 
@@ -296,8 +304,6 @@ window.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-
-
         const sidebarName = document.querySelector('.username');
         sidebarName.textContent = `${user.last_name} ${user.first_name[0]}.`;
     } catch (err) {
@@ -305,13 +311,11 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-
-document.addEventListener('DOMContentLoaded', function() {
-
+document.addEventListener('DOMContentLoaded', function () {
     const usernameElement = document.getElementById('user-profile');
 
     if (usernameElement) {
-        usernameElement.addEventListener('click', function() {
+        usernameElement.addEventListener('click', function () {
             window.location.href = 'http://localhost:3000/user/account';
         });
     }
@@ -320,17 +324,13 @@ document.addEventListener('DOMContentLoaded', function() {
 const tripsMenuItem = document.getElementById('trips-menu-item');
 const balanceMenuItem = document.getElementById('balance-menu-item');
 
-
-tripsMenuItem.addEventListener('click', function() {
+tripsMenuItem.addEventListener('click', function () {
     window.location.href = 'http://localhost:3000/user/trips';
 });
 
-
-balanceMenuItem.addEventListener('click', function() {
+balanceMenuItem.addEventListener('click', function () {
     window.location.href = 'http://localhost:3000/user/balance';
 });
-
-
 
 document.addEventListener('DOMContentLoaded', () => {
     loadFines();
@@ -355,18 +355,16 @@ async function loadFines() {
         let paidCount = 0;
 
         for (const fine of fines) {
-            const dateObj = new Date(fine.date);
-            const date = dateObj.toLocaleDateString();
-            const time = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const { date, time } = formatDateTime(fine.date);
             const amount = `${fine.amount}₽`;
 
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${date}</td>
-                <td>${time}</td>
-                <td>${amount}</td>
-                <td class="dots">&#8942;</td>
-            `;
+        <td>${date}</td>
+        <td>${time}</td>
+        <td>${amount}</td>
+        <td class="dots">&#8942;</td>
+      `;
 
             if (fine.paid) {
                 paidTbody.appendChild(row);
@@ -389,4 +387,3 @@ async function loadFines() {
         console.error('Error loading fines:', err);
     }
 }
-
