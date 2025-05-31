@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  neo4j:
+  db:
     image: neo4j:5
     ports:
       - "7474:7474"
@@ -16,7 +16,7 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - neo4j
+      - db
 
 volumes:
   neo4j_data:
