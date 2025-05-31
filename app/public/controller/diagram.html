@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Diagram</title>
+    <link rel="stylesheet" href="css/paid-fines-controller.css" />
+    <style>
+        /* Дополнительные стили для layout диаграммы и фильтра */
+        .main-content {
+            display: flex;
+            gap: 30px;
+            padding: 20px;
+            flex-direction: row;
+        }
+        .diagram-section {
+            flex: 1;
+            /* чтобы диаграмма заняла левую часть */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .diagram-controls {
+            margin-bottom: 10px;
+        }
+        .filter-section {
+            flex-basis: 400px;
+            background: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 15px 20px;
+        }
+        .filter-section h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .filter-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+        .filter-row label {
+            width: 130px;
+            font-weight: 500;
+        }
+        .filter-row input[type="text"],
+        .filter-row input[type="number"] {
+            width: 110px;
+            padding: 4px 8px;
+            border: 1px solid #aaa;
+            border-radius: 4px;
+        }
+        .filter-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .filter-buttons button {
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            border: none;
+            background-color: #444;
+            color: white;
+            font-weight: 600;
+        }
+        .filter-buttons button:hover {
+            background-color: #333;
+        }
+        /* Для выпадающих селектов (например, Number of fines / Last name) */
+        select {
+            padding: 5px 8px;
+            border-radius: 4px;
+            border: 1px solid #aaa;
+            cursor: pointer;
+        }
+        /* Подпись под диаграммой */
+        .count-label {
+            margin-top: 25px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+<div class="sidebar">
+    <div>
+        <div class="sidebar-header">
+            <div class="logo">
+                <img src="assets/logo.svg" alt="Logo" class="logo-icon" />
+                <div class="site-name">zaicam.net</div>
+            </div>
+            <div class="menu-dots">&#8943;</div>
+        </div>
+        <hr class="dotted-line" />
+        <div id="unpaid-fines-menu" class="menu-item">
+            <img src="assets/balance.png" alt="Balance Icon" class="menu-icon" />
+            Unpaid fines
+        </div>
+        <div id="paid-fines-menu" class="menu-item">
+            <img src="assets/fines.png" alt="Balance Icon" class="menu-icon" />
+            Paid fines
+        </div>
+        <div id="schedule-menu" class="menu-item">
+            <img src="assets/trips.svg" alt="Balance Icon" class="menu-icon" />
+            Schedule
+        </div>
+        <div id="diagram-menu" class="menu-item active">
+            <img src="assets/diagram.svg" alt="Balance Icon" class="menu-icon" />
+            Diagram
+        </div>
+    </div>
+
+    <div class="sidebar-footer">
+        <div class="import-export-buttons">
+            <button class="import-export-button">
+                <img src="assets/import.svg" alt="Import" />
+            </button>
+            <button class="import-export-button">
+                <img src="assets/export.svg" alt="Export" />
+            </button>
+        </div>
+        <hr class="dotted-line" />
+        <div id="user-profile" class="user-profile">
+            <img src="assets/profile.svg" alt="Balance Icon" class="avatar" />
+            <div class="username">Гребенников Д.</div>
+            <div class="menu-dots">&#8943;</div>
+        </div>
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="diagram-section">
+        <div class="diagram-controls">
+            <label for="diagram-type">Number of fines</label>
+            <select id="diagram-type" name="diagram-type">
+                <option>Number of fines</option>
+                <option>Number of unpaid fines</option>
+                <option>Number of paid fines</option>
+                <option>Amount of fines unpaid</option>
+                <option>Amount of fines paid</option>
+                <option>Number of trips</option>
+            </select>
+        </div>
+        <svg id="diagram" width="1000" height="600" style="border:1px solid #ddd;"></svg>
+        <div class="count-label">Count: 10</div>
+        <div style="margin-top: 20px;">
+            <label for="x-axis">Last name</label>
+            <select id="x-axis" name="x-axis">
+                <option>Last name</option>
+                <option>First name</option>
+                <option>Date</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="filter-section">
+        <h2>Filter</h2>
+        <div class="filter-row">
+            <label for="last-name">Last name</label>
+            <input type="text" id="last-name" value="Гребенников" />
+        </div>
+        <div class="filter-row">
+            <label for="first-name">First name</label>
+            <input type="text" id="first-name" value="Дмитрий" />
+        </div>
+        <div class="filter-row">
+            <label for="email">Email</label>
+            <input type="text" id="email" placeholder="example@mail.com" />
+        </div>
+        <div class="filter-row">
+            <label>Number of fines</label>
+            <input type="number" id="number-fines-from" placeholder="From" />
+            <input type="number" id="number-fines-to" placeholder="To" />
+        </div>
+        <div class="filter-row">
+            <label>Number of unpaid fines</label>
+            <input type="number" id="unpaid-fines-from" placeholder="From" />
+            <input type="number" id="unpaid-fines-to" placeholder="To" />
+        </div>
+        <div class="filter-row">
+            <label>Number of paid fines</label>
+            <input type="number" id="paid-fines-from" placeholder="From" />
+            <input type="number" id="paid-fines-to" placeholder="To" />
+        </div>
+        <div class="filter-row">
+            <label>Amount of fines unpaid</label>
+            <input type="number" id="amount-unpaid-from" placeholder="From" />
+            <input type="number" id="amount-unpaid-to" placeholder="To" />
+        </div>
+        <div class="filter-row">
+            <label>Amount of fines paid</label>
+            <input type="number" id="amount-paid-from" placeholder="From" />
+            <input type="number" id="amount-paid-to" placeholder="To" />
+        </div>
+        <div class="filter-row">
+            <label>Number of trips</label>
+            <input type="number" id="trips-from" placeholder="From" />
+            <input type="number" id="trips-to" placeholder="To" />
+        </div>
+        <div class="filter-row">
+            <label>Date</label>
+            <input type="date" id="date-from" />
+            <input type="date" id="date-to" />
+        </div>
+        <div class="filter-buttons">
+            <button id="filter-confirm">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Здесь будет код для отрисовки диаграммы и работы фильтров
+</script>
+
+</body>
+</html>
