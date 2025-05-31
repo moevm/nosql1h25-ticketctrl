@@ -38,6 +38,8 @@ const controllerAccount = require('./routes/account_controller_routes');
 const controllerPaidFines = require('./routes/acc-controller_paid-fines_routes')
 const controllerUnpaidFines = require('./routes/acc-controller_unpaid-fines_routes')
 const controllerSchedule = require('./routes/acc-controller_schedule_routes')
+const controllerDiagram = require('./routes/diagram_routes');
+
 
 app.use('/user', authRoutes);
 app.use('/user', registrationRoutes);
@@ -50,6 +52,7 @@ app.use('/controller', controllerAccount);
 app.use('/controller', controllerPaidFines);
 app.use('/controller', controllerUnpaidFines);
 app.use('/controller', controllerSchedule);
+app.use('/controller', controllerDiagram);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
