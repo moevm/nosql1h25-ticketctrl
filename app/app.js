@@ -5,10 +5,10 @@ const app = express();
 const session = require('express-session');
 
 app.use(session({
-    secret: 'zaicam_secret', // замени на более надежный ключ
+    secret: 'zaicam_secret',
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false } // true только если HTTPS
+    cookie: { secure: false }
 }));
 
 
