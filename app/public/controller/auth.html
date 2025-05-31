@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zaicam.net Login</title>
+    <link rel="stylesheet" href="css/auth-controller.css">
+</head>
+<body>
+<div class="container">
+    <img src="./assets/logo.svg" alt="logo" width="40px" height="40px" class="logo">
+    <div class="title">Welcome to Zaicam.net</div>
+    <div class="desc">Sign in to access the account area</div>
+    <form id="login-form" method="POST" action="/user/login">
+        <input type="email" id="email" name="email" placeholder="Email" required />
+        <input type="password" id="password" name="password" placeholder="Password" required />
+        <button type="submit">Continue with Email</button>
+    </form>
+    <div class="links">
+        <a href="/user/registration">Sign up</a>
+    </div>
+</div>
+<a id="passenger-login" href="#" class="passenger-button">I'm a passenger</a>
+<script src="../controller/js/auth.js"></script>
+
+</body>
+</html>

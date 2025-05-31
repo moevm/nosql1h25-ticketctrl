@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Balance</title>
+    <link rel="stylesheet" href="css/balance.css"/>
+</head>
+<body>
+<div class="sidebar">
+    <div>
+        <div class="sidebar-header">
+            <div class="logo">
+                <img src="assets/logo.svg" alt="Logo" class="logo-icon"/>
+                <div class="site-name">zaicam.net</div>
+            </div>
+            <div class="menu-dots">&#8943;</div>
+        </div>
+        <hr class="dotted-line"/>
+        <div id="balance-menu-item" class="menu-item active">
+            <img src="assets/balance.png" alt="Balance Icon" class="menu-icon"/>
+            Balance
+        </div>
+        <div id="trips-menu-item" class="menu-item">
+            <img src="assets/trips.svg" alt="Trips Icon" class="menu-icon"/>
+            Trips
+        </div>
+        <div id="fines-menu-item" class="menu-item">
+            <img src="assets/fines.png" alt="Fines Icon" class="menu-icon"/>
+            Fines
+        </div>
+    </div>
+
+    <div class="sidebar-footer">
+        <hr class="dotted-line"/>
+        <div id="user-profile" class="user-profile">
+            <img src="assets/profile.svg" alt="Profile" class="avatar"/>
+            <div class="username">Гребенников Д.</div>
+            <div class="menu-dots">&#8943;</div>
+        </div>
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="header-row">
+        <h1 class="section-title">
+            <img src="assets/balance.png" alt="Balance Icon" class="menu-icon"/>
+            Balance
+        </h1>
+    </div>
+    <hr class="solid-line"/>
+
+    <div class="table-and-side">
+        <!-- Левая колонка -->
+        <div class="side-panel">
+            <div class="balance-box">
+                <img src="assets/balance.svg" alt="Logo" class="balance-logo"/>
+                <div class="balance-info">
+                    <div class="amount">2 307 Р</div>
+                    <div class="label">Balance</div>
+                </div>
+            </div>
+
+            <div class="payment-types-box">
+                <table class="trips-table">
+                    <thead>
+                    <tr class="table-heading-row">
+                        <th colspan="2" class="table-heading">🟢 Types of payments</th>
+                    </tr>
+                    <tr>
+                        <th>Type</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="payment-trigger" data-type="СБП">
+                        <td>СБП</td>
+                        <td class="dots">&#8942;</td>
+                    </tr>
+                    <tr class="payment-trigger" data-type="Telephone">
+                        <td>Telephone</td>
+                        <td class="dots">&#8942;</td>
+                    </tr>
+                    <tr class="payment-trigger" data-type="Card">
+                        <td>Card</td>
+                        <td class="dots">&#8942;</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">Count: 3</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Правая колонка: Payment history -->
+        <div class="table-wrapper">
+            <table class="trips-table">
+                <thead>
+                <tr class="table-heading-row">
+                    <th colspan="4" class="table-heading">
+                        <div class="heading-container">
+                            <span>Payment history</span>
+                            <button class="filter-button">Filter</button>
+                        </div>
+                    </th>
+                </tr>
+                <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Payments</th>
+                    <th>Type</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>25.02.2025</td>
+                    <td>19:16</td>
+                    <td>100р</td>
+                    <td>СБП</td>
+                </tr>
+                <tr>
+                    <td>25.02.2025</td>
+                    <td>19:16</td>
+                    <td>300р</td>
+                    <td>СБП</td>
+                </tr>
+                <tr>
+                    <td>25.02.2025</td>
+                    <td>19:16</td>
+                    <td>400р</td>
+                    <td>Telephone</td>
+                </tr>
+                <tr>
+                    <td>25.02.2025</td>
+                    <td>19:16</td>
+                    <td>1000р</td>
+                    <td>СБП</td>
+                </tr>
+                <tr>
+                    <td>25.02.2025</td>
+                    <td>19:16</td>
+                    <td>200р</td>
+                    <td>Card</td>
+                </tr>
+                <tr>
+                    <td>25.02.2025</td>
+                    <td>19:16</td>
+                    <td>1001р</td>
+                    <td>СБП</td>
+                </tr>
+                <tr>
+                    <td colspan="4">Count: 6</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal">
+        <h2 id="modal-title">Replenishment</h2>
+        <div class="input-group">
+            <label for="amount-input" class="modal-label">enter amount</label>
+            <input type="number" id="amount-input" placeholder="amount" class="modal-input"/>
+        </div>
+        <hr class="modal-divider"/>
+        <button id="confirm-button" class="modal-button">Confirm payment</button>
+    </div>
+</div>
+
+<div id="filter-modal-overlay" class="modal-overlay hidden">
+    <div class="modal">
+        <h2 id="filter-modal-title">Filtration</h2>
+
+        <div class="input-group">
+            <select id="segment-select" class="modal-select">
+                <option value="" disabled selected hidden>Segment category</option>
+                <option value="date">Date</option>
+                <option value="payments">Payments</option>
+            </select>
+        </div>
+
+        <div class="input-row">
+            <div class="input-subgroup">
+                <label for="from-input" class="modal-label">From</label>
+                <input type="date" id="from-input" class="modal-date"/>
+            </div>
+            <div class="input-subgroup">
+                <label for="to-input" class="modal-label">To</label>
+                <input type="date" id="to-input" class="modal-date"/>
+            </div>
+        </div>
+
+        <hr class="modal-divider"/>
+
+        <button id="filter-confirm-button" class="modal-button">Confirm</button>
+    </div>
+</div>
+
+<div id="filter-step2-modal" class="modal-overlay hidden">
+    <div class="modal">
+        <h2>Filtration</h2>
+
+        <select id="type-category-select" class="modal-select1">
+            <option value="" disabled selected hidden>Type category</option>
+            <option value="option1"Type</option>
+        </select>
+
+        <select id="choose-type-select" class="modal-select1">
+            <option value="" disabled selected hidden>Choose type</option>
+            <option value="type1">Type A</option>
+            <option value="type2">Type B</option>
+        </select>
+
+        <hr class="modal-divider"/>
+
+        <button id="filter-step2-confirm" class="modal-button">Confirm</button>
+    </div>
+</div>
+
+<div id="top-filter-modal" class="modal-overlay hidden">
+    <div class="modal">
+        <h2>Filtration</h2>
+        <hr class="modal-divider"/>
+
+        <div class="filter-section">
+            <p>Date: From 01.01.2000 To 12.12.2012</p>
+            <hr class="modal-divider"/>
+
+            <p>Payment: From 10 To 1000</p>
+            <hr class="modal-divider"/>
+
+            <div class="action-buttons">
+                <button id="plus-button" class="modal-button action-button">
+                    <img src="assets/plus.svg" alt="plus icon" class="action-icon"/>
+                </button>
+                <button id="trash-button" class="modal-button action-button">
+                    <img src="assets/trash.svg" alt="trash icon" class="action-icon"/>
+                </button>
+            </div>
+
+            <hr class="modal-divider"/>
+
+            <div class="button-confirm">
+            <button id="top-filter-confirm" class="modal-button1">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/balance.js"></script>
+</body>
+</html>

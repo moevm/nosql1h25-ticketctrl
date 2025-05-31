@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Account</title>
+    <link rel="stylesheet" href="css/account-controller.css"/>
+</head>
+<body>
+<div class="sidebar">
+    <div>
+        <div class="sidebar-header">
+            <div class="logo">
+                <img src="assets/logo.svg" alt="Logo" class="logo-icon" />
+                <div class="site-name">zaicam.net</div>
+            </div>
+            <div class="menu-dots">&#8943;</div>
+        </div>
+        <hr class="dotted-line" />
+        <div id="unpaid-fines-menu" class="menu-item">
+            <img src="assets/balance.png" alt="Balance Icon" class="menu-icon" />
+            Unpaid fines
+        </div>
+        <div id="paid-fines-menu" class="menu-item">
+            <img src="assets/fines.png" alt="Balance Icon" class="menu-icon" />
+            Paid fines
+        </div>
+        <div id="schedule-menu" class="menu-item">
+            <img src="assets/trips.svg" alt="Balance Icon" class="menu-icon" />
+            Schedule
+        </div>
+        <div id="diagram-menu" class="menu-item">
+            <img src="assets/diagram.svg" alt="Balance Icon" class="menu-icon" />
+            Diagram
+        </div>
+    </div>
+
+    <div class="sidebar-footer">
+        <div class="import-export-buttons">
+            <button class="import-export-button">
+                <img src="assets/import.svg" alt="Import">
+            </button>
+            <button class="import-export-button">
+                <img src="assets/export.svg" alt="Export">
+            </button>
+        </div>
+        <hr class="dotted-line"/>
+        <div id="user-profile" class="user-profile">
+            <img src="assets/profile.svg" alt="Balance Icon" class="avatar"/>
+            <div class="username">Гребенников Д.</div>
+            <div class="menu-dots">&#8943;</div>
+        </div>
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="header-row">
+        <h1 class="section-title">
+            <img src="assets/profile.svg" alt="Fine Icon" class="menu-icon"/>
+            Account
+        </h1>
+    </div>
+    <hr class="solid-line"/>
+    <div class="table-wrapper two-tables">
+        <table class="trips-table">
+            <thead>
+            <tr class="table-heading-row">
+                <th colspan="4" class="table-heading">
+                    <div class="heading-container">
+                        <span>Account</span>
+                    </div>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>ID</td>
+                <td>123456789</td>
+            </tr>
+            <tr>
+                <td>Last name</td>
+                <td>Гребенников</td>
+            </tr>
+            <tr>
+                <td>First name</td>
+                <td>Дмитрий</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>example@email.com</td>
+                <td class="dots email-dots">&#8942;</td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td>********</td>
+                <td class="dots password-dots">&#8942;</td>
+            </tr>
+            <tr>
+                <td>Created at</td>
+                <td>28.05.2005 19:48</td>
+            </tr>
+            <tr>
+                <td>Last update at</td>
+                <td>28.05.2012 19:48</td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+            </tbody>
+    </div>
+</div>
+
+<div id="modal-overlay-email" class="modal-overlay hidden">
+    <div class="modal">
+        <h2 id="modal-title-email">Change email</h2>
+        <div class="input-group">
+            <label for="email-input" class="modal-label">enter email</label>
+            <input type="email" id="email-input" placeholder="Enter email" class="modal-input"/>
+        </div>
+        <hr class="modal-divider"/>
+        <button id="confirm-email-button" class="modal-button">Confirm</button>
+    </div>
+</div>
+
+<div id="modal-overlay-password" class="modal-overlay hidden">
+    <div class="modal">
+        <h2 id="modal-title-password">Change password</h2>
+        <div class="input-group">
+            <label for="password-input" class="modal-label">enter new password</label>
+            <input type="password" id="password-input" placeholder="Enter new password" class="modal-input"/>
+        </div>
+        <hr class="modal-divider"/>
+        <button id="confirm-password-button" class="modal-button">Confirm</button>
+    </div>
+</div>
+
+<script src="js/account-controller.js"></script>
+</body>
+</html>
