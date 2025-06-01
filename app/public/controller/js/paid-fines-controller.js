@@ -250,6 +250,11 @@ document.getElementById('schedule-menu').addEventListener('click', e => {
     window.location.href = '/controller/schedule';
 });
 
+document.getElementById('diagram-menu').addEventListener('click', e => {
+    e.preventDefault();
+    window.location.href = '/controller/diagram';
+});
+
 // Переход к аккаунту по клику на профиль пользователя
 document.addEventListener('DOMContentLoaded', () => {
     const usernameElement = document.getElementById('user-profile');
