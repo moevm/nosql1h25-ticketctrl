@@ -8,15 +8,17 @@ router.get('/diagram', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/controller/diagram.html'));
 })
 
-// Роут для всех штрафов без фильтрации
+
 router.get('/diagram/fines_all', async (req, res) => {
     const session = driver.session();
     try {
         const result = await session.run(
-            `MATCH (f:Fine)
-             OPTIONAL MATCH (p:Passenger) WHERE p._id = f.passanger_id
-             RETURN f._id AS id, f.date AS date, f.amount AS amount, f.paid AS paid,
-                    p.first_name AS firstName, p.last_name AS lastName`
+            `
+            MATCH (f:Fine)
+            OPTIONAL MATCH (p:Passenger) WHERE p._id = f.passanger_id
+            RETURN f._id AS id, f.date AS date, f.amount AS amount, f.paid AS paid,
+                p.first_name AS firstName, p.last_name AS lastName, p.email AS email
+            `
         );
 
         const fines = result.records.map(record => ({
@@ -26,6 +28,7 @@ router.get('/diagram/fines_all', async (req, res) => {
             paid: record.get('paid'),
             firstName: record.get('firstName'),
             lastName: record.get('lastName'),
+            email: record.get('email'),
         }));
 
         res.json(fines);
@@ -42,9 +45,12 @@ router.get('/diagram/trips_all', async (req, res) => {
     const session = driver.session();
     try {
         const result = await session.run(
-            `MATCH (t:Trip)
-             RETURN t._id AS id, t.date AS date, t.type AS type, t.coast AS coast,
-                    t.passanger_first_name AS firstName, t.passanger_last_name AS lastName`
+            `
+            MATCH (t:Trip)
+            OPTIONAL MATCH (p:Passenger) WHERE p._id = t.passanger_id
+            RETURN t._id AS id, t.date AS date, t.type AS type, t.coast AS coast,
+                p.first_name AS firstName, p.last_name AS lastName, p.email AS email
+            `
         );
 
         const trips = result.records.map(record => ({
@@ -54,6 +60,7 @@ router.get('/diagram/trips_all', async (req, res) => {
             coast: record.get('coast'),
             firstName: record.get('firstName'),
             lastName: record.get('lastName'),
+            email: record.get('email'),
         }));
 
         res.json(trips);
