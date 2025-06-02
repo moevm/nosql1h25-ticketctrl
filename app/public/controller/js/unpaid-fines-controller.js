@@ -281,7 +281,7 @@ document.getElementById('diagram-menu').addEventListener('click', e => {
     window.location.href = '/controller/diagram';
 });
 
-// Переход к аккаунту по клику на профиль
+
 document.addEventListener('DOMContentLoaded', () => {
     const usernameElement = document.getElementById('user-profile');
     if (usernameElement) {
@@ -291,42 +291,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// ——— Добавляем обработчик кнопки подтверждения добавления штрафа после полной загрузки страницы ———
 window.addEventListener('load', () => {
     const addFineConfirm = document.getElementById('add-fine-confirm');
-    console.log('addFineConfirm element:', addFineConfirm);
     if (!addFineConfirm) {
         console.error('Button #add-fine-confirm not found!');
         return;
     }
-    addFineConfirm.addEventListener('click', async () => {
-        console.log('addFineConfirm clicked');
 
-        const dateInput = document.getElementById('fine-date').value;
-        const timeInput = document.getElementById('fine-time').value;
+    addFineConfirm.addEventListener('click', async () => {
         const paymentInput = document.getElementById('fine-payment').value;
         const userIdInput = document.getElementById('fine-user-id').value;
 
-        if (!dateInput || !timeInput || !paymentInput || !userIdInput) {
+        if (!paymentInput || !userIdInput) {
             alert('Please fill in all fields');
             return;
         }
 
-        const dateTimeObj = new Date(`${dateInput}T${timeInput}:00Z`);
-        console.log('Parsed dateTimeObj:', dateTimeObj);
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
 
-        if (isNaN(dateTimeObj.getTime())) {
-            alert('Invalid date or time format');
-            return;
-        }
-
-        const dateTime = dateTimeObj.toISOString();
-
-        console.log('Sending fine creation request:', {
-            date: dateTime,
-            amount: parseFloat(paymentInput),
-            passengerId: userIdInput
-        });
+        const dateTime = `${year}-${month}-${day}T${hours}:${minutes}:00`;
 
         try {
             const res = await fetch('/controller/create-fine', {
@@ -346,9 +334,7 @@ window.addEventListener('load', () => {
             if (res.ok) {
                 alert('Fine created successfully');
                 document.getElementById('add-fine-modal').classList.add('hidden');
-                // Обновляем таблицу штрафов
-                const event = new Event('fetchFines');
-                document.dispatchEvent(event);
+                document.dispatchEvent(new Event('fetchFines'));
             } else {
                 alert(data.error || 'Error creating fine');
             }
@@ -358,3 +344,5 @@ window.addEventListener('load', () => {
         }
     });
 });
+
+
