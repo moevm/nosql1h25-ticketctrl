@@ -68,6 +68,11 @@ document.getElementById('paid-fines-menu').addEventListener('click', function (e
     window.location.href = '/controller/paid-fines';
 });
 
+document.getElementById('diagram-menu').addEventListener('click', e => {
+    e.preventDefault();
+    window.location.href = '/controller/diagram';
+});
+
 
 document.addEventListener('DOMContentLoaded', function() {
 

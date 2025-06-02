@@ -42,10 +42,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('confirm-button').addEventListener('click', () => {
+    document.getElementById('confirm-button').addEventListener('click', async (e) => {
+        e.preventDefault();
         const amount = amountInput.value.trim();
-        if (amount) {
+        const typeKey = Object.keys(typeMap).find(key => typeMap[key] === modalTitle.textContent) || null;
+
+        console.log('Попытка платежа:', { amount, typeKey });
+
+        if (!amount || !typeKey) {
+            alert('Please enter an amount and select a valid payment type');
+            return;
+        }
+
+        try {
+            const res = await fetch('/user/account/topup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    amount,
+                    type: typeKey
+                })
+            });
+            if (!res.ok) {
+                const error = await res.json();
+                throw new Error(error.error || 'Payment failed');
+            }
             modalOverlay.classList.add('hidden');
+            alert('Payment successful!');
+            fetchTopups();  // Обновляем список пополнений и баланс
+
+        } catch (err) {
+            alert(`Error: ${err.message}`);
         }
     });
 

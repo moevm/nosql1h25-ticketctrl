@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Для добавления штрафа (плюс)
     const addFineModal = document.getElementById('add-fine-modal');
-    const addFineConfirm = document.getElementById('add-fine-confirm');
     const plusMainButton = document.querySelector('.plus-button');
 
     let allFines = [];
@@ -51,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (filter.type === 'date') {
                 filtered = filtered.filter(fine => {
                     let fineDate = parseDateDMY(fine.date);
-                    if (!fineDate) return false; // если дата невалидна — исключаем
+                    if (!fineDate) return false;
                     return fineDate >= filter.from && fineDate <= filter.to;
                 });
             } else if (filter.type === 'payments') {
@@ -246,22 +245,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    addFineConfirm.addEventListener('click', () => {
-        // Можно тут добавить логику отправки новых штрафов
-        addFineModal.classList.add('hidden');
-    });
-
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') {
-            addFineModal.classList.add('hidden');
-        }
-    });
-
     // Загрузка штрафов при старте
     fetchFines();
 });
 
-// Отдельно – загрузка данных пользователя в сайдбар
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         const res = await fetch('/controller/account-data');
@@ -289,6 +276,11 @@ document.getElementById('schedule-menu').addEventListener('click', e => {
     window.location.href = '/controller/schedule';
 });
 
+document.getElementById('diagram-menu').addEventListener('click', e => {
+    e.preventDefault();
+    window.location.href = '/controller/diagram';
+});
+
 // Переход к аккаунту по клику на профиль
 document.addEventListener('DOMContentLoaded', () => {
     const usernameElement = document.getElementById('user-profile');
@@ -297,4 +289,72 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'http://localhost:3000/controller/account';
         });
     }
+});
+
+// ——— Добавляем обработчик кнопки подтверждения добавления штрафа после полной загрузки страницы ———
+window.addEventListener('load', () => {
+    const addFineConfirm = document.getElementById('add-fine-confirm');
+    console.log('addFineConfirm element:', addFineConfirm);
+    if (!addFineConfirm) {
+        console.error('Button #add-fine-confirm not found!');
+        return;
+    }
+    addFineConfirm.addEventListener('click', async () => {
+        console.log('addFineConfirm clicked');
+
+        const dateInput = document.getElementById('fine-date').value;
+        const timeInput = document.getElementById('fine-time').value;
+        const paymentInput = document.getElementById('fine-payment').value;
+        const userIdInput = document.getElementById('fine-user-id').value;
+
+        if (!dateInput || !timeInput || !paymentInput || !userIdInput) {
+            alert('Please fill in all fields');
+            return;
+        }
+
+        const dateTimeObj = new Date(`${dateInput}T${timeInput}:00Z`);
+        console.log('Parsed dateTimeObj:', dateTimeObj);
+
+        if (isNaN(dateTimeObj.getTime())) {
+            alert('Invalid date or time format');
+            return;
+        }
+
+        const dateTime = dateTimeObj.toISOString();
+
+        console.log('Sending fine creation request:', {
+            date: dateTime,
+            amount: parseFloat(paymentInput),
+            passengerId: userIdInput
+        });
+
+        try {
+            const res = await fetch('/controller/create-fine', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    date: dateTime,
+                    amount: parseFloat(paymentInput),
+                    passengerId: userIdInput
+                })
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                alert('Fine created successfully');
+                document.getElementById('add-fine-modal').classList.add('hidden');
+                // Обновляем таблицу штрафов
+                const event = new Event('fetchFines');
+                document.dispatchEvent(event);
+            } else {
+                alert(data.error || 'Error creating fine');
+            }
+        } catch (err) {
+            console.error('Fetch error:', err);
+            alert('Network error');
+        }
+    });
 });

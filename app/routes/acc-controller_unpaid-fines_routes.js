@@ -96,7 +96,75 @@ router.get('/account-data', async (req, res) => {
     }
 });
 
+router.post('/create-fine', async (req, res) => {
+    console.log('POST /create-fine called with body:', req.body);
 
+    const session = driver.session();
+    const email = req.session.email;
+
+    if (!email) {
+        console.log('Unauthorized: no email in session');
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    let { date, amount, passengerId } = req.body;
+
+    if (!date || !amount || !passengerId) {
+        console.log('Bad request: missing fields', { date, amount, passengerId });
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const passengerIdNum = Number(passengerId);
+    if (isNaN(passengerIdNum)) {
+        console.log('Invalid passengerId:', passengerId);
+        return res.status(400).json({ error: 'Invalid passengerId' });
+    }
+
+    try {
+        // Получаем _id контроллера по email из сессии
+        const controllerRes = await session.run(
+            'MATCH (c:Controller {email: $email}) RETURN c._id AS id',
+            { email }
+        );
+        if (controllerRes.records.length === 0) {
+            console.log('Controller not found for email:', email);
+            return res.status(404).json({ error: 'Controller not found' });
+        }
+        const controllerId = controllerRes.records[0].get('id');
+
+        // Генерируем уникальный id штрафа
+        const fineId = 'fine-' + Date.now() + '-' + Math.floor(Math.random() * 10000);
+
+        // Создаем штраф и привязываем к пассажиру
+        const txResult = await session.writeTransaction(tx =>
+            tx.run(
+                `
+                CREATE (f:Fine {
+                    _id: $fineId,
+                    date: datetime($date),
+                    controller_id: $controllerId,
+                    passanger_id: $passengerIdNum,
+                    amount: $amount,
+                    paid: false
+                })
+                WITH f
+                MATCH (p:Passenger {_id: $passengerIdNum})
+                SET p.fines = coalesce(p.fines, []) + f._id
+                RETURN f._id AS id
+                `,
+                { fineId, date, controllerId, passengerIdNum, amount }
+            )
+        );
+
+        console.log('Fine created with id:', fineId);
+        res.json({ message: 'Fine created', fineId });
+    } catch (err) {
+        console.error('Error creating fine:', err);
+        res.status(500).json({ error: 'Server error' });
+    } finally {
+        await session.close();
+    }
+});
 
 
 
