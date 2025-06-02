@@ -97,6 +97,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
+
 function formatDate(datetimeStr) {
     if (!datetimeStr) return '-';
     try {
@@ -123,7 +124,10 @@ document.getElementById('schedule-menu').addEventListener('click', function (e) 
     window.location.href = '/controller/schedule';
 });
 
+
 document.getElementById('diagram-menu').addEventListener('click', e => {
     e.preventDefault();
     window.location.href = '/controller/diagram';
 });
+
+
