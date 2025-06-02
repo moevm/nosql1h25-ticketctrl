@@ -78,6 +78,38 @@ router.get('/account/fines', async (req, res) => {
     }
 });
 
+router.post('/account/fines/pay', async (req, res) => {
+    const session = driver.session();
+    const { fineId } = req.body;
+
+    if (!fineId) {
+        return res.status(400).json({ error: 'fineId is required' });
+    }
+
+    try {
+        const result = await session.run(
+            `
+            MATCH (f:Fine {_id: $fineId})
+            SET f.paid = true
+            RETURN f._id AS id, f.paid AS paid
+            `,
+            { fineId }
+        );
+
+        if (result.records.length === 0) {
+            return res.status(404).json({ error: 'Fine not found' });
+        }
+
+        const updated = result.records[0].toObject();
+        return res.json({ message: 'Fine updated', updated });
+    } catch (err) {
+        console.error('Error updating fine:', err);
+        return res.status(500).json({ error: 'Server error' });
+    } finally {
+        await session.close();
+    }
+});
+
 
 
 
