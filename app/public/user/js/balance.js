@@ -112,6 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
         applyFiltersAndRender();
     });
 
+
     filterModalOverlay.addEventListener('click', e => {
         if (e.target === filterModalOverlay) {
             filterModalOverlay.classList.add('hidden');
@@ -130,37 +131,43 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     filterConfirmButton.addEventListener('click', () => {
-        const type = segmentSelect.value;
-        let from = fromInput.value;
-        let to = toInput.value;
+    const type = segmentSelect.value;
+    let from = fromInput.value;
+    let to = toInput.value;
 
-        if (!type || !from || !to) {
-            alert('Please fill in all fields');
+    if (!type) {
+        alert('Please select a filter segment');
+        return;
+    }
+
+    if (!from && !to) {
+        alert('Please fill at least one of the fields: From or To');
+        return;
+    }
+
+    if (type === 'date') {
+        from = from ? new Date(from) : null;
+        to = to ? new Date(to) : null;
+        if (from && to && from > to) {
+            alert('From date should be earlier than To date');
             return;
         }
-
-        if (type === 'date') {
-            from = new Date(from);
-            to = new Date(to);
-            to.setHours(23, 59, 59, 999);
-            if (from > to) {
-                alert('From date should be earlier than To date');
-                return;
-            }
-        } else if (type === 'payments') {
-            from = parseFloat(from);
-            to = parseFloat(to);
-            if (from > to) {
-                alert('From payment should be less than To payment');
-                return;
-            }
+        if (to) to.setHours(23, 59, 59, 999);
+    } else if (type === 'payments') {
+        from = from ? parseFloat(from) : null;
+        to = to ? parseFloat(to) : null;
+        if (from && to && from > to) {
+            alert('From payment should be less than To payment');
+            return;
         }
+    }
 
-        filters.push({ type, from, to });
-        filterModalOverlay.classList.add('hidden');
-        topFilterModal.classList.remove('hidden');
-        updateFilterSection();
+    filters.push({ type, from, to });
+    filterModalOverlay.classList.add('hidden');
+    topFilterModal.classList.remove('hidden');
+    updateFilterSection();
     });
+
 
     function updateFilterSection() {
         const section = topFilterModal.querySelector('.filter-section');
@@ -172,9 +179,13 @@ document.addEventListener('DOMContentLoaded', () => {
             filters.forEach(f => {
                 const p = document.createElement('p');
                 if (f.type === 'date') {
-                    p.textContent = `Date: From ${f.from.toLocaleDateString()} To ${f.to.toLocaleDateString()}`;
+                    const fromText = f.from ? `From ${f.from.toLocaleDateString()}` : '';
+                    const toText = f.to ? `To ${f.to.toLocaleDateString()}` : '';
+                    p.textContent = `Date: ${fromText} ${toText}`.trim();
                 } else {
-                    p.textContent = `Payment: From ${f.from} To ${f.to}`;
+                    const fromText = f.from !== null && f.from !== undefined ? `From ${f.from}` : '';
+                    const toText = f.to !== null && f.to !== undefined ? `To ${f.to}` : '';
+                    p.textContent = `Payment: ${fromText} ${toText}`.trim();
                 }
                 section.appendChild(p);
                 section.appendChild(document.createElement('hr'));
@@ -216,6 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
             applyFiltersAndRender();
         });
 
+
         confirmBtn.addEventListener('click', () => {
             topFilterModal.classList.add('hidden');
             applyFiltersAndRender();
@@ -223,23 +235,38 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function applyFiltersAndRender() {
-        let filtered = [...allTopups];
+    let filtered = [...allTopups];
 
-        filters.forEach(filter => {
-            if (filter.type === 'date') {
-                filtered = filtered.filter(item => {
-                    const d = new Date(item.date);
+    filters.forEach(filter => {
+        if (filter.type === 'date') {
+            filtered = filtered.filter(item => {
+                const d = new Date(item.date);
+                if (filter.from && filter.to) {
                     return d >= filter.from && d <= filter.to;
-                });
-            } else if (filter.type === 'payments') {
-                filtered = filtered.filter(item => {
+                } else if (filter.from) {
+                    return d >= filter.from;
+                } else if (filter.to) {
+                    return d <= filter.to;
+                }
+                return true;
+            });
+        } else if (filter.type === 'payments') {
+            filtered = filtered.filter(item => {
+                if (filter.from !== null && filter.to !== null) {
                     return item.amount >= filter.from && item.amount <= filter.to;
-                });
-            }
-        });
+                } else if (filter.from !== null) {
+                    return item.amount >= filter.from;
+                } else if (filter.to !== null) {
+                    return item.amount <= filter.to;
+                }
+                return true;
+            });
+        }
+    });
 
-        renderTopups(filtered);
+    renderTopups(filtered);
     }
+
 
     function renderTopups(topups) {
         paymentHistoryBody.innerHTML = '';
