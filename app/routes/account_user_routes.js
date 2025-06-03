@@ -86,6 +86,17 @@ router.post('/account/update', async (req, res) => {
 });
 
 
+router.post('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).json({ error: 'Ошибка при выходе' });
+        }
+        res.clearCookie('connect.sid'); // если используется cookie-сессия
+        res.sendStatus(200);
+    });
+});
+
+
 
 
 module.exports = router;

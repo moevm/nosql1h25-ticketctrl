@@ -272,6 +272,25 @@ function updateDOMField(field, value) {
     rows[7].children[1].textContent = `${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
 }
 
+const logoutButton = document.getElementById('logout-button');
+
+logoutButton.addEventListener('click', async () => {
+    try {
+        const res = await fetch('/user/logout', {
+            method: 'POST'
+        });
+
+        if (res.ok) {
+            window.location.href = '/'; // или на нужную страницу входа
+        } else {
+            alert('Ошибка при выходе');
+        }
+    } catch (err) {
+        alert('Ошибка соединения');
+    }
+});
+
+
 
 const tripsMenuItem = document.getElementById('trips-menu-item');
 const balanceMenuItem = document.getElementById('balance-menu-item');

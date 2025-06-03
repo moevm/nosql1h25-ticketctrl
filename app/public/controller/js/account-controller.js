@@ -109,6 +109,26 @@ function formatDate(datetimeStr) {
     }
 }
 
+
+const logoutButton = document.getElementById('logout-button');
+
+logoutButton.addEventListener('click', async () => {
+    try {
+        const res = await fetch('/user/logout', {
+            method: 'POST'
+        });
+
+        if (res.ok) {
+            window.location.href = '/'; // или на нужную страницу входа
+        } else {
+            alert('Ошибка при выходе');
+        }
+    } catch (err) {
+        alert('Ошибка соединения');
+    }
+});
+
+
 document.getElementById('unpaid-fines-menu').addEventListener('click', function (e) {
     e.preventDefault();
     window.location.href = '/controller/unpaid-fines';
