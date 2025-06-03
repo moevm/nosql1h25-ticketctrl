@@ -8,20 +8,23 @@ router.post('/import-statistics', async (req, res) => {
   const { fines = [], trips = [], users = [], passengers = [], controllers = [] } = req.body;
 
   try {
+    // Импорт штрафов
     for (const fine of fines) {
       await session.run(`
         MERGE (f:Fine { _id: $id })
         SET f += $props
-      `, { id: fine._id || fine.id, props: fine });
+      `, { id: fine._id, props: fine });
     }
 
+    // Импорт поездок
     for (const trip of trips) {
       await session.run(`
-        MERGE (t:Trip { date: $date, time: $time, route: $route })
+        MERGE (t:Trip { _id: $id })
         SET t += $props
-      `, { ...trip, props: trip });
+      `, { id: trip._id, props: trip });
     }
 
+    // Импорт пользователей
     for (const user of users) {
       await session.run(`
         MERGE (u:User { email: $email })
@@ -29,18 +32,52 @@ router.post('/import-statistics', async (req, res) => {
       `, { email: user.email, props: user });
     }
 
+    // Импорт пассажиров и их связей
     for (const passenger of passengers) {
       await session.run(`
         MERGE (p:Passenger { _id: $id })
         SET p += $props
-      `, { id: passenger._id || passenger.id, props: passenger });
+      `, { id: passenger._id, props: passenger });
+
+      // Связь с поездками
+      if (passenger.trips) {
+        const tripIds = passenger.trips.split(',');
+        for (const tripId of tripIds) {
+          await session.run(`
+            MATCH (p:Passenger { _id: $pid }), (t:Trip { _id: $tid })
+            MERGE (p)-[:PASSENGER_HAS_TRIP]->(t)
+          `, { pid: passenger._id, tid: tripId });
+        }
+      }
+
+      // Связь с штрафами
+      if (passenger.fines) {
+        const fineIds = passenger.fines.split(',');
+        for (const fineId of fineIds) {
+          await session.run(`
+            MATCH (p:Passenger { _id: $pid }), (f:Fine { _id: $fid })
+            MERGE (p)-[:PASSENGER_HAS_FINE]->(f)
+          `, { pid: passenger._id, fid: fineId });
+        }
+      }
     }
 
+    // Импорт контроллеров и их связей
     for (const controller of controllers) {
       await session.run(`
-        MERGE (c:Controller { email: $email })
+        MERGE (c:Controller { _id: $id })
         SET c += $props
-      `, { email: controller.email, props: controller });
+      `, { id: controller._id, props: controller });
+
+      if (controller.fines) {
+        const fineIds = controller.fines.split(',').filter(Boolean);
+        for (const fineId of fineIds) {
+          await session.run(`
+            MATCH (c:Controller { _id: $cid }), (f:Fine { _id: $fid })
+            MERGE (c)-[:CONTROLLER_ISSUED_FINE]->(f)
+          `, { cid: controller._id, fid: fineId });
+        }
+      }
     }
 
     res.json({ message: 'Импорт завершён успешно' });
