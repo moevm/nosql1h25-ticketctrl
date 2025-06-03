@@ -1,0 +1,80 @@
+{
+  "fines": [
+    {
+      "date": "2025-05-31T15:00:00Z",
+      "amount": 120,
+      "controller_id": "1",
+      "passanger_id": 1748710961507,
+      "paid": true,
+      "_id": "fine-1748716433045-3816"
+    },
+    {
+      "date": "2025-05-31T15:01:00Z",
+      "amount": 121,
+      "controller_id": "1",
+      "passanger_id": 1748710961507,
+      "paid": true,
+      "_id": "fine-1748716954660-7070"
+    },
+    {
+      "date": "2025-07-31T15:10:00Z",
+      "amount": 123,
+      "controller_id": "1",
+      "passanger_id": 1748710961507,
+      "paid": true,
+      "_id": "fine-1748718103131-7878"
+    },
+    {
+      "date": "2025-07-16T15:01:00Z",
+      "amount": 1000,
+      "controller_id": "1",
+      "passanger_id": 1748710961507,
+      "paid": true,
+      "_id": "fine-1748719626561-950"
+    }
+  ],
+  "trips": [
+    {
+      "date": "2025-06-02T12:00:00Z",
+      "amount": 550,
+      "from": "Moscow",
+      "to": "Saint Petersburg",
+      "_id": "123"
+    },
+    {
+      "date": "2025-06-02T12:00:00Z",
+      "amount": 5502345,
+      "from": "Moscow",
+      "to": "Saint Petersburg",
+      "_id": "5234523454"
+    }
+  ],
+  "users": [],
+  "passengers": [
+    {
+      "topups": "1,1748719441241,1748719493418,1748719499054,1748719510974,1748719520088,1748719580783,1748894706100",
+      "password": "$2b$10$6ENHvuZa.CZBzqWY8/YVYevn.4FgvHK68bIXj0zaPMWjvAGw4RYmS",
+      "trips": "123,5234523454",
+      "fines": "fine-1748716433045-3816,fine-1748716954660-7070,fine-1748718103131-7878,fine-1748719626561-950",
+      "last_update_at": "2025-05-31T17:02:41.508000000Z",
+      "last_name": "Berezin",
+      "_id": 1748710961507,
+      "create_at": "2025-05-31T17:02:41.508000000Z",
+      "first_name": "Dmitry",
+      "email": "dssantierhalberd@gmail.com"
+    }
+  ],
+  "controllers": [
+    {
+      "schedule": "9b14bd9f-c090-496d-8dfa-e6a1d0f686da,f3800af8-f0e4-46b2-9046-03239ce2747c,619c9de8-ee0c-45ff-ae06-55ae3963f93c",
+      "password": "$2b$10$u3Qd47QQttF2rFPpzt3a6uNIHAdrovCmzirsszfxrzYUfQ/ERDBnG",
+      "fines": "",
+      "last_update_at": "2025-05-31T17:03:16.128000000Z",
+      "last_name": "Berezin",
+      "_id": "1",
+      "create_at": "2025-05-31T17:03:16.128000000Z",
+      "first_name": "Dmitry",
+      "email": "controller003@example.com"
+    }
+  ]
+}
