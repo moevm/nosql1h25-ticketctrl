@@ -37,23 +37,40 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function applyFiltersAndRender() {
-        let filtered = allFines;
+    let filtered = allFines;
 
-        filters.forEach(filter => {
-            if (filter.type === 'date') {
-                filtered = filtered.filter(fine => {
-                    let fineDate = parseDateDMY(fine.date);
-                    if (!fineDate) return false; // если дата невалидна — исключаем
+     filters.forEach(filter => {
+        if (filter.type === 'date') {
+            filtered = filtered.filter(fine => {
+                let fineDate = parseDateDMY(fine.date);
+                if (!fineDate) return false;
+
+                if (filter.from && filter.to) {
                     return fineDate >= filter.from && fineDate <= filter.to;
-                });
-            } else if (filter.type === 'payments') {
-                filtered = filtered.filter(fine => {
+                } else if (filter.from) {
+                    return fineDate >= filter.from;
+                } else if (filter.to) {
+                    return fineDate <= filter.to;
+                } else {
+                    return true; // Нет ограничений по дате
+                }
+            });
+        } else if (filter.type === 'payments') {
+            filtered = filtered.filter(fine => {
+                if (filter.from !== null && filter.to !== null) {
                     return fine.amount >= filter.from && fine.amount <= filter.to;
-                });
-            }
-        });
+                } else if (filter.from !== null) {
+                    return fine.amount >= filter.from;
+                } else if (filter.to !== null) {
+                    return fine.amount <= filter.to;
+                } else {
+                    return true; // Нет ограничений по платежу
+                }
+            });
+        }
+    });
 
-        renderTable(filtered);
+    renderTable(filtered);
     }
 
     function renderTable(fines) {
@@ -81,19 +98,23 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateFilterSection() {
         const filterSection = topFilterModal.querySelector('.filter-section');
         filterSection.innerHTML = '';
-
+        
         if (filters.length === 0) {
             filterSection.innerHTML = '<p>No filters applied</p><hr class="modal-divider"/>';
         } else {
             filters.forEach(filter => {
-                const p = document.createElement('p');
-                if (filter.type === 'date') {
-                    p.textContent = `Date: From ${filter.from.toLocaleDateString()} To ${filter.to.toLocaleDateString()}`;
-                } else if (filter.type === 'payments') {
-                    p.textContent = `Payment: From ${filter.from} To ${filter.to}`;
-                }
-                filterSection.appendChild(p);
-                filterSection.appendChild(document.createElement('hr'));
+            const p = document.createElement('p');
+            if (filter.type === 'date') {
+                const from = filter.from ? `From ${filter.from.toLocaleDateString()}` : '';
+                const to = filter.to ? `To ${filter.to.toLocaleDateString()}` : '';
+                p.textContent = `Date: ${from} ${to}`.trim();
+            } else if (filter.type === 'payments') {
+                const from = filter.from !== null && filter.from !== undefined ? `From ${filter.from}` : '';
+                const to = filter.to !== null && filter.to !== undefined ? `To ${filter.to}` : '';
+                p.textContent = `Payment: ${from} ${to}`.trim();
+            }
+            filterSection.appendChild(p);
+            filterSection.appendChild(document.createElement('hr'));
             });
         }
 
@@ -158,39 +179,45 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     filterConfirmButton.addEventListener('click', () => {
-        const type = segmentSelect.value;
-        let from = fromInput.value;
-        let to = toInput.value;
+    const type = segmentSelect.value;
+    let from = fromInput.value;
+    let to = toInput.value;
 
-        if (!type || !from || !to) {
-            alert('Please fill in all fields');
+    if (!type) {
+        alert('Please select a filter segment');
+        return;
+    }
+
+    if (!from && !to) {
+        alert('Please fill at least one field: From or To');
+        return;
+    }
+
+    if (type === 'date') {
+        from = from ? new Date(from) : null;
+        to = to ? new Date(to) : null;
+
+        if (from && to && from > to) {
+            alert('From date should be earlier than To date');
             return;
         }
+    } else if (type === 'payments') {
+        from = from ? Number(from) : null;
+        to = to ? Number(to) : null;
 
-        if (type === 'date') {
-            from = new Date(from);
-            to = new Date(to);
-            if (from > to) {
-                alert('From date should be earlier than To date');
-                return;
-            }
-        } else if (type === 'payments') {
-            from = Number(from);
-            to = Number(to);
-            if (from > to) {
-                alert('From payment should be less than To payment');
-                return;
-            }
+        if (from && to && from > to) {
+            alert('From payment should be less than To payment');
+            return;
         }
+    }
 
-        filters.push({ type, from, to });
+    filters.push({ type, from, to });
 
-        filterModalOverlay.classList.add('hidden');
-        topFilterModal.classList.remove('hidden');
-        updateFilterSection();
+    filterModalOverlay.classList.add('hidden');
+    topFilterModal.classList.remove('hidden');
+    updateFilterSection();
     });
-
-
+    
     filterButtons.forEach(button => {
         button.addEventListener('click', () => {
             topFilterModal.classList.remove('hidden');
