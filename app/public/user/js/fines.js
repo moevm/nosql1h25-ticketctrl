@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let unpaidFilters = [];
     let paidFilters = [];
     let currentTable = null; // 'unpaid' или 'paid'
+    let selectedFineId = null;
 
     async function fetchFines() {
         try {
@@ -109,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <td>${date}</td>
         <td>${time}</td>
         <td>${amount}</td>
-        <td class="dots">&#8942;</td>
+        <td class="dots payment-trigger" data-id="${fine.id}">&#8942;</td>
       `;
             unpaidTbody.appendChild(row);
             unpaidCount++;
@@ -359,12 +360,17 @@ async function loadFines() {
             const amount = `${fine.amount}₽`;
 
             const row = document.createElement('tr');
+
+            const cell = fine.paid
+                ? `<td class="dots">&#8942;</td>`
+                : `<td class="dots payment-trigger" data-id="${fine.id}">&#8942;</td>`;
+
             row.innerHTML = `
-        <td>${date}</td>
-        <td>${time}</td>
-        <td>${amount}</td>
-        <td class="dots">&#8942;</td>
-      `;
+                <td>${date}</td>
+                <td>${time}</td>
+                <td>${amount}</td>
+                ${cell}
+            `;
 
             if (fine.paid) {
                 paidTbody.appendChild(row);
@@ -387,3 +393,32 @@ async function loadFines() {
         console.error('Error loading fines:', err);
     }
 }
+
+document.addEventListener('click', e => {
+    if (e.target.classList.contains('payment-trigger')) {
+        selectedFineId = e.target.dataset.id;
+        document.getElementById('pay-fine-modal').classList.remove('hidden');
+    }
+});
+
+document.getElementById('confirm-pay-fine').addEventListener('click', async () => {
+    if (!selectedFineId) return;
+    try {
+        const res = await fetch('/user/account/fines/pay', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ fineId: selectedFineId })
+        });
+        if (!res.ok) throw new Error('Ошибка при оплате');
+        document.getElementById('pay-fine-modal').classList.add('hidden');
+        selectedFineId = null;
+        loadFines(); // перезагрузка данных
+    } catch (err) {
+        console.error(err);
+    }
+});
+
+document.getElementById('cancel-pay-fine').addEventListener('click', () => {
+    selectedFineId = null;
+    document.getElementById('pay-fine-modal').classList.add('hidden');
+});

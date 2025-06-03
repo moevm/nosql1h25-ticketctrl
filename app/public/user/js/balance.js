@@ -268,14 +268,17 @@ document.addEventListener('DOMContentLoaded', () => {
         countTr.innerHTML = `<td colspan="4">Count: ${topups.length}</td>`;
         paymentHistoryBody.appendChild(countTr);
 
-        balanceAmountEl.textContent = total.toFixed(2).replace('.', ',') + ' Р';
     }
 
     async function fetchTopups() {
         try {
             const res = await fetch('/user/account/balance');
             if (!res.ok) throw new Error('Failed to fetch');
-            allTopups = await res.json();
+
+            const data = await res.json();
+            allTopups = data.topups;
+            balanceAmountEl.textContent = data.balance.toFixed(2).replace('.', ',') + ' Р';
+
             applyFiltersAndRender();
         } catch (err) {
             console.error('Ошибка загрузки:', err);

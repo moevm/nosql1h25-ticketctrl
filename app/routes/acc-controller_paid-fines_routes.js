@@ -38,11 +38,9 @@ router.get('/fines_paid', async (req, res) => {
         );
 
         const fines = result.records.map(record => {
-            const date = new Date(record.get('date'));
             return {
                 id: record.get('id'),
-                date: date.toLocaleDateString('ru-RU'),
-                time: date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }),
+                date: record.get('date'),
                 amount: record.get('amount'),
                 paid: record.get('paid'),
                 firstName: record.get('firstName'),

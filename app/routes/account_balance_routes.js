@@ -44,30 +44,59 @@ router.get('/account/balance', async (req, res) => {
     }
 
     try {
-        const result = await session.run(
-            `
-            MATCH (p:Passenger {email: $email})
-            WITH p.topups AS topupIds
-            MATCH (t:Topup)
-            WHERE t._id IN topupIds
-            RETURN t
-            ORDER BY t.date DESC
-            `,
+        // Получаем пассажира
+        const userResult = await session.run(
+            'MATCH (p:Passenger {email: $email}) RETURN p',
             { email }
         );
 
-        const topups = result.records.map(record => {
-            const topup = record.get('t').properties;
+        if (userResult.records.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const passenger = userResult.records[0].get('p').properties;
+        const passanger_id = passenger._id;
+
+        // Получаем все пополнения
+        const topupResult = await session.run(
+            `
+            MATCH (t:Topup)
+            WHERE t.passanger_id = $passanger_id
+            RETURN t
+            ORDER BY t.date DESC
+            `,
+            { passanger_id }
+        );
+
+        const topups = topupResult.records.map(r => {
+            const t = r.get('t').properties;
             return {
-                _id: topup._id,
-                date: topup.date,
-                type: topup.type,
-                amount: parseFloat(topup.amount),
-                passenger_id: topup.passenger_id  // исправлено на passenger_id
+                _id: t._id,
+                date: t.date,
+                type: t.type,
+                amount: parseFloat(t.amount),
+                passenger_id: t.passanger_id
             };
         });
 
-        res.json(topups);
+        // Получаем все оплаченные штрафы
+        const fineResult = await session.run(
+            `
+            MATCH (f:Fine)
+            WHERE f.passanger_id = $passanger_id AND f.paid = true
+            RETURN f.amount AS amount
+            `,
+            { passanger_id }
+        );
+
+        const totalTopup = topups.reduce((sum, t) => sum + t.amount, 0);
+        const totalFines = fineResult.records.reduce((sum, r) => sum + parseFloat(r.get('amount')), 0);
+        const actualBalance = totalTopup - totalFines;
+
+        res.json({ topups, balance: actualBalance });// отправляем историю пополнений, как раньше
+
+        // 👉 Если хочешь отдельно вернуть actualBalance:
+        // res.json({ topups, balance: actualBalance });
 
     } catch (err) {
         console.error('Error fetching balance:', err);
