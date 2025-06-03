@@ -44,24 +44,42 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function applyFiltersAndRender() {
-        let filtered = allFines;
+    let filtered = allFines;
 
-        filters.forEach(filter => {
-            if (filter.type === 'date') {
-                filtered = filtered.filter(fine => {
-                    let fineDate = parseDateDMY(fine.date);
-                    if (!fineDate) return false;
+    filters.forEach(filter => {
+        if (filter.type === 'date') {
+            filtered = filtered.filter(fine => {
+                let fineDate = parseDateDMY(fine.date);
+                if (!fineDate) return false;
+
+                if (filter.from && filter.to) {
                     return fineDate >= filter.from && fineDate <= filter.to;
-                });
-            } else if (filter.type === 'payments') {
-                filtered = filtered.filter(fine => {
+                } else if (filter.from) {
+                    return fineDate >= filter.from;
+                } else if (filter.to) {
+                    return fineDate <= filter.to;
+                } else {
+                    return true; // Нет ограничений по дате
+                }
+            });
+        } else if (filter.type === 'payments') {
+            filtered = filtered.filter(fine => {
+                if (filter.from !== null && filter.to !== null) {
                     return fine.amount >= filter.from && fine.amount <= filter.to;
-                });
-            }
-        });
+                } else if (filter.from !== null) {
+                    return fine.amount >= filter.from;
+                } else if (filter.to !== null) {
+                    return fine.amount <= filter.to;
+                } else {
+                    return true; // Нет ограничений по платежу
+                }
+            });
+        }
+    });
 
-        renderTable(filtered);
-    }
+    renderTable(filtered);
+}
+
 
     // Отрисовка таблицы штрафов
     function renderTable(fines) {
@@ -91,18 +109,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const filterSection = topFilterModal.querySelector('.filter-section');
         filterSection.innerHTML = '';
 
+
         if (filters.length === 0) {
             filterSection.innerHTML = '<p>No filters applied</p><hr class="modal-divider"/>';
         } else {
             filters.forEach(filter => {
-                const p = document.createElement('p');
-                if (filter.type === 'date') {
-                    p.textContent = `Date: From ${filter.from.toLocaleDateString()} To ${filter.to.toLocaleDateString()}`;
-                } else if (filter.type === 'payments') {
-                    p.textContent = `Payment: From ${filter.from} To ${filter.to}`;
-                }
-                filterSection.appendChild(p);
-                filterSection.appendChild(document.createElement('hr'));
+            const p = document.createElement('p');
+            if (filter.type === 'date') {
+                const from = filter.from ? `From ${filter.from.toLocaleDateString()}` : '';
+                const to = filter.to ? `To ${filter.to.toLocaleDateString()}` : '';
+                p.textContent = `Date: ${from} ${to}`.trim();
+            } else if (filter.type === 'payments') {
+                const from = filter.from !== null && filter.from !== undefined ? `From ${filter.from}` : '';
+                const to = filter.to !== null && filter.to !== undefined ? `To ${filter.to}` : '';
+                p.textContent = `Payment: ${from} ${to}`.trim();
+            }
+            filterSection.appendChild(p);
+            filterSection.appendChild(document.createElement('hr'));
             });
         }
 
@@ -172,37 +195,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Добавление фильтра
     filterConfirmButton.addEventListener('click', () => {
-        const type = segmentSelect.value;
-        let from = fromInput.value;
-        let to = toInput.value;
+        const segment = segmentSelect.value;
+        const from = fromInput.value;
+        const to = toInput.value;
 
-        if (!type || !from || !to) {
-            alert('Please fill in all fields');
+        if (!segment) {
+            alert("Please select a filter segment.");
             return;
         }
 
-        if (type === 'date') {
-            from = new Date(from);
-            to = new Date(to);
-            if (from > to) {
-                alert('From date should be earlier than To date');
-                return;
-            }
-        } else if (type === 'payments') {
-            from = Number(from);
-            to = Number(to);
-            if (from > to) {
-                alert('From payment should be less than To payment');
-                return;
-            }
+        if (!from && !to) {
+            alert("Please fill in at least one of the fields: From or To.");
+            return;
         }
 
-        filters.push({ type, from, to });
+        const filter = {
+            type: segment,
+            from: from ? (segment === 'date' ? new Date(from) : parseFloat(from)) : null,
+            to: to ? (segment === 'date' ? new Date(to) : parseFloat(to)) : null
+        };
+
+        filters.push(filter);
 
         filterModalOverlay.classList.add('hidden');
         topFilterModal.classList.remove('hidden');
         updateFilterSection();
     });
+
 
     // Открытие окна фильтра при нажатии на кнопку
     filterButtons.forEach(button => {
@@ -331,6 +350,7 @@ window.addEventListener('load', () => {
 
             const data = await res.json();
 
+
             if (res.ok) {
                 alert('Fine created successfully');
                 document.getElementById('add-fine-modal').classList.add('hidden');
@@ -344,5 +364,3 @@ window.addEventListener('load', () => {
         }
     });
 });
-
-
